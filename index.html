@@ -89,7 +89,7 @@
       text-align: center;
     }
 
-    /* Кнопки размеров: 50 / 75 / 100 / 140 / 180 */
+    /* Кнопки размеров */
     .size-selector {
       display: flex;
       justify-content: space-between;
@@ -114,7 +114,7 @@
       box-shadow: 0 0 12px rgba(0,122,255,0.5);
     }
 
-    /* Кнопки расцветок (плашки с градиентами под 45 градусов) */
+    /* Кнопки расцветок */
     .color-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -136,7 +136,7 @@
       box-shadow: 0 0 14px rgba(255,255,255,0.6);
     }
 
-    /* Палитры 10 цветов по фото макета */
+    /* Градиенты плашек */
     .c1  { background: linear-gradient(135deg, #00d084 50%, #00d084 50%); }
     .c2  { background: linear-gradient(135deg, #00e676 50%, #ff1744 50%); }
     .c3  { background: linear-gradient(135deg, #a7ffeb 50%, #00e676 50%); }
@@ -161,13 +161,13 @@
       src="samets.glb" 
       alt="Приманка UUgor" 
       ar 
-      ar-modes="scene-viewer webxr quick-look" 
+      ar-modes="quick-look scene-viewer webxr" 
       ar-scale="fixed"
       camera-controls 
       autoplay 
       shadow-intensity="1.2"
       exposure="1.1"
-      scale="1 1 1">
+      scale="16.67 16.67 16.67">
       
       <button slot="ar-button" class="ar-launch-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
@@ -177,19 +177,17 @@
   </div>
 
   <div class="controls-card">
-    <!-- Выбор размера -->
     <div>
       <div class="section-title">Размер (мм)</div>
       <div class="size-selector">
-        <button class="size-btn" data-scale="0.5">50</button>
-        <button class="size-btn" data-scale="0.75">75</button>
-        <button class="size-btn active" data-scale="1.0">100</button>
-        <button class="size-btn" data-scale="1.4">140</button>
-        <button class="size-btn" data-scale="1.8">180</button>
+        <button class="size-btn" data-scale="8.33">50</button>
+        <button class="size-btn" data-scale="12.5">75</button>
+        <button class="size-btn active" data-scale="16.67">100</button>
+        <button class="size-btn" data-scale="23.33">140</button>
+        <button class="size-btn" data-scale="30.0">180</button>
       </div>
     </div>
 
-    <!-- Выбор расцветки -->
     <div>
       <div class="section-title">Расцветка</div>
       <div class="color-grid" id="colorGrid">
@@ -212,18 +210,15 @@
     const sizeBtns = document.querySelectorAll('.size-btn');
     const colorSwatches = document.querySelectorAll('.color-swatch');
 
-    // Логика смены размера
     sizeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         sizeBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const s = btn.getAttribute('data-scale');
-        // Меняем 3D масштаб пропорционально
         viewer.scale = `${s} ${s} ${s}`;
       });
     });
 
-    // Логика смены расцветки
     colorSwatches.forEach(swatch => {
       swatch.addEventListener('click', () => {
         colorSwatches.forEach(s => s.classList.remove('active'));
@@ -233,9 +228,8 @@
       });
     });
 
-    // Автоматический пересчёт при первой загрузке (по дефолту 100 размер)
     viewer.addEventListener('load', () => {
-      viewer.scale = "1 1 1";
+      viewer.scale = "16.67 16.67 16.67";
     });
   </script>
 </body>
