@@ -159,6 +159,7 @@
     <model-viewer 
       id="lureViewer"
       src="samets.glb" 
+      ios-src="samets.usdz"
       alt="Приманка UUgor" 
       ar 
       ar-modes="quick-look scene-viewer webxr" 
@@ -231,7 +232,7 @@
       });
     });
 
-    // Принудительный базовый скейл при старте
+    // Фиксация масштаба и автозапуск
     viewer.addEventListener('load', () => {
       viewer.scale = "16.67 16.67 16.67";
       if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
