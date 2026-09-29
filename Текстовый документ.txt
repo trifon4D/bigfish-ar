@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог Samets</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #121212;
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .model-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .model-btn {
+      padding: 10px 16px;
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .model-btn.active {
+      background: #007bff;
+      border-color: #007bff;
+    }
+    .model-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-style: dashed;
+    }
+    model-viewer {
+      width: 100%;
+      max-width: 900px;
+      height: 500px;
+      background-color: #1a1a1a;
+      border-radius: 12px;
+    }
+    .variant-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      max-width: 900px;
+      justify-content: center;
+    }
+    .variant-btn {
+      padding: 8px 12px;
+      background: #252525;
+      color: #ccc;
+      border: 1px solid #444;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .variant-btn.active {
+      background: #28a745;
+      border-color: #28a745;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Каталог приманок Samets</h2>
+
+  <div class="model-selector" id="modelSelector">
+    <button class="model-btn active" data-src="samets.glb">UUgor</button>
+    <button class="model-btn" data-src="samets_model_2.glb" disabled>Приманка 2 (Скоро)</button>
+    <button class="model-btn" data-src="samets_model_3.glb" disabled>Приманка 3 (Скоро)</button>
+    <button class="model-btn" data-src="samets_model_4.glb" disabled>Приманка 4 (Скоро)</button>
+  </div>
+
+  <model-viewer 
+    id="lureViewer"
+    src="samets.glb" 
+    alt="Силиконовая приманка" 
+    ar 
+    ar-modes="webxr scene-viewer quick-look" 
+    camera-controls 
+    autoplay 
+    shadow-intensity="1">
+  </model-viewer>
+
+  <div class="variant-controls" id="variantContainer"></div>
+
+  <script>
+    const viewer = document.getElementById('lureViewer');
+    const variantContainer = document.getElementById('variantContainer');
+    const modelButtons = document.querySelectorAll('.model-btn');
+
+    function updateVariantButtons() {
+      variantContainer.innerHTML = '';
+      const variants = viewer.availableVariants;
+      if (!variants || variants.length === 0) return;
+
+      variants.forEach((vName, index) => {
+        const btn = document.createElement('button');
+        btn.className = `variant-btn ${index === 0 ? 'active' : ''}`;
+        btn.textContent = vName;
+
+        btn.addEventListener('click', () => {
+          viewer.variantName = vName;
+          document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+
+        variantContainer.appendChild(btn);
+      });
+    }
+
+    viewer.addEventListener('load', updateVariantButtons);
+
+    modelButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        modelButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        viewer.src = btn.getAttribute('data-src');
+      });
+    });
+  </script>
+</body>
+</html>
