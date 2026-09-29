@@ -2,134 +2,240 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Каталог Samets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>САМЦЫ - Каталог AR</title>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
     body {
       margin: 0;
-      background: #121212;
+      padding: 0;
+      background: #0f1115;
       color: #fff;
-      font-family: system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
       min-height: 100vh;
-      box-sizing: border-box;
+      overflow-x: hidden;
     }
-    .model-selector {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
+
+    header {
+      width: 100%;
+      text-align: center;
+      padding: 20px 10px 10px;
     }
-    .model-btn {
-      padding: 10px 16px;
-      background: #222;
-      color: #fff;
-      border: 1px solid #444;
-      border-radius: 8px;
-      cursor: pointer;
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
-    .model-btn.active {
-      background: #007bff;
-      border-color: #007bff;
-    }
-    .model-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      border-style: dashed;
+
+    /* 3D Вьювер */
+    .viewer-container {
+      width: 100%;
+      max-width: 500px;
+      height: 48vh;
+      position: relative;
     }
     model-viewer {
       width: 100%;
-      max-width: 900px;
-      height: 500px;
-      background-color: #1a1a1a;
-      border-radius: 12px;
+      height: 100%;
+      --poster-color: transparent;
+      background: radial-gradient(circle, #252a34 0%, #0f1115 70%);
     }
-    .variant-controls {
+
+    /* Кнопка быстрого перехода в AR */
+    .ar-launch-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0, 122, 255, 0.9);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 16px;
-      max-width: 900px;
-      justify-content: center;
-    }
-    .variant-btn {
-      padding: 8px 12px;
-      background: #252525;
-      color: #ccc;
-      border: 1px solid #444;
-      border-radius: 6px;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 15px rgba(0,122,255,0.4);
       cursor: pointer;
     }
-    .variant-btn.active {
-      background: #28a745;
-      border-color: #28a745;
-      color: #fff;
+
+    /* Панель управления */
+    .controls-card {
+      width: 100%;
+      max-width: 500px;
+      padding: 10px 20px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
+
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #7a8290;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    /* Кнопки размеров: 50 / 75 / 100 / 140 / 180 */
+    .size-selector {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .size-btn {
+      flex: 1;
+      padding: 10px 0;
+      background: #1a1e26;
+      border: 1px solid #2d3340;
+      color: #cfd6e4;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .size-btn.active {
+      background: #007aff;
+      border-color: #007aff;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(0,122,255,0.5);
+    }
+
+    /* Кнопки расцветок (плашки с градиентами под 45 градусов) */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      justify-items: center;
+    }
+    .color-swatch {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      border: 2px solid #2d3340;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .color-swatch.active {
+      border-color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 0 14px rgba(255,255,255,0.6);
+    }
+
+    /* Палитры 10 цветов по фото макета */
+    .c1  { background: linear-gradient(135deg, #00d084 50%, #00d084 50%); }
+    .c2  { background: linear-gradient(135deg, #00e676 50%, #ff1744 50%); }
+    .c3  { background: linear-gradient(135deg, #a7ffeb 50%, #00e676 50%); }
+    .c4  { background: linear-gradient(135deg, #1de9b6 50%, #76ff03 50%); }
+    .c5  { background: linear-gradient(135deg, #2979ff 50%, #f50057 50%); }
+    .c6  { background: linear-gradient(135deg, #00e676 50%, #ffea00 50%); }
+    .c7  { background: linear-gradient(135deg, #ff9100 50%, #ffee58 50%); }
+    .c8  { background: linear-gradient(135deg, #263238 50%, #ffffff 50%); }
+    .c9  { background: linear-gradient(135deg, #d50000 50%, #76ff03 50%); }
+    .c10 { background: linear-gradient(135deg, #d81b60 50%, #fff59d 50%); }
   </style>
 </head>
 <body>
 
-  <h2>Каталог приманок Samets</h2>
+  <header>
+    <h1>САМЦЫ</h1>
+  </header>
 
-  <div class="model-selector" id="modelSelector">
-    <button class="model-btn active" data-src="samets.glb">UUgor</button>
-    <button class="model-btn" data-src="samets_model_2.glb" disabled>Приманка 2 (Скоро)</button>
-    <button class="model-btn" data-src="samets_model_3.glb" disabled>Приманка 3 (Скоро)</button>
-    <button class="model-btn" data-src="samets_model_4.glb" disabled>Приманка 4 (Скоро)</button>
+  <div class="viewer-container">
+    <model-viewer 
+      id="lureViewer"
+      src="samets.glb" 
+      alt="Приманка UUgor" 
+      ar 
+      ar-modes="scene-viewer webxr quick-look" 
+      ar-scale="fixed"
+      camera-controls 
+      autoplay 
+      shadow-intensity="1.2"
+      exposure="1.1"
+      scale="1 1 1">
+      
+      <button slot="ar-button" class="ar-launch-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+        В КАМЕРУ
+      </button>
+    </model-viewer>
   </div>
 
-  <model-viewer 
-    id="lureViewer"
-    src="samets.glb" 
-    alt="Силиконовая приманка" 
-    ar 
-    ar-modes="webxr scene-viewer quick-look" 
-    camera-controls 
-    autoplay 
-    shadow-intensity="1">
-  </model-viewer>
+  <div class="controls-card">
+    <!-- Выбор размера -->
+    <div>
+      <div class="section-title">Размер (мм)</div>
+      <div class="size-selector">
+        <button class="size-btn" data-scale="0.5">50</button>
+        <button class="size-btn" data-scale="0.75">75</button>
+        <button class="size-btn active" data-scale="1.0">100</button>
+        <button class="size-btn" data-scale="1.4">140</button>
+        <button class="size-btn" data-scale="1.8">180</button>
+      </div>
+    </div>
 
-  <div class="variant-controls" id="variantContainer"></div>
+    <!-- Выбор расцветки -->
+    <div>
+      <div class="section-title">Расцветка</div>
+      <div class="color-grid" id="colorGrid">
+        <div class="color-swatch c1 active" data-variant="samets_color_01"></div>
+        <div class="color-swatch c2" data-variant="samets_color_02"></div>
+        <div class="color-swatch c3" data-variant="samets_color_03"></div>
+        <div class="color-swatch c4" data-variant="samets_color_04"></div>
+        <div class="color-swatch c5" data-variant="samets_color_05"></div>
+        <div class="color-swatch c6" data-variant="samets_color_06"></div>
+        <div class="color-swatch c7" data-variant="samets_color_07"></div>
+        <div class="color-swatch c8" data-variant="samets_color_08"></div>
+        <div class="color-swatch c9" data-variant="samets_color_09"></div>
+        <div class="color-swatch c10" data-variant="samets_color_10"></div>
+      </div>
+    </div>
+  </div>
 
   <script>
     const viewer = document.getElementById('lureViewer');
-    const variantContainer = document.getElementById('variantContainer');
-    const modelButtons = document.querySelectorAll('.model-btn');
+    const sizeBtns = document.querySelectorAll('.size-btn');
+    const colorSwatches = document.querySelectorAll('.color-swatch');
 
-    function updateVariantButtons() {
-      variantContainer.innerHTML = '';
-      const variants = viewer.availableVariants;
-      if (!variants || variants.length === 0) return;
-
-      variants.forEach((vName, index) => {
-        const btn = document.createElement('button');
-        btn.className = `variant-btn ${index === 0 ? 'active' : ''}`;
-        btn.textContent = vName;
-
-        btn.addEventListener('click', () => {
-          viewer.variantName = vName;
-          document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-        });
-
-        variantContainer.appendChild(btn);
-      });
-    }
-
-    viewer.addEventListener('load', updateVariantButtons);
-
-    modelButtons.forEach(btn => {
+    // Логика смены размера
+    sizeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        if (btn.disabled) return;
-        modelButtons.forEach(b => b.classList.remove('active'));
+        sizeBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        viewer.src = btn.getAttribute('data-src');
+        const s = btn.getAttribute('data-scale');
+        // Меняем 3D масштаб пропорционально
+        viewer.scale = `${s} ${s} ${s}`;
       });
+    });
+
+    // Логика смены расцветки
+    colorSwatches.forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        colorSwatches.forEach(s => s.classList.remove('active'));
+        swatch.classList.add('active');
+        const variantName = swatch.getAttribute('data-variant');
+        viewer.variantName = variantName;
+      });
+    });
+
+    // Автоматический пересчёт при первой загрузке (по дефолту 100 размер)
+    viewer.addEventListener('load', () => {
+      viewer.scale = "1 1 1";
     });
   </script>
 </body>
