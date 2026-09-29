@@ -136,7 +136,7 @@
       box-shadow: 0 0 14px rgba(255,255,255,0.6);
     }
 
-    /* Градиенты плашек */
+    /* Цвета плашек */
     .c1  { background: linear-gradient(135deg, #00d084 50%, #00d084 50%); }
     .c2  { background: linear-gradient(135deg, #00e676 50%, #ff1744 50%); }
     .c3  { background: linear-gradient(135deg, #a7ffeb 50%, #00e676 50%); }
@@ -159,7 +159,6 @@
     <model-viewer 
       id="lureViewer"
       src="samets.glb" 
-      ios-src="samets.usdz"
       alt="Приманка UUgor" 
       ar 
       ar-modes="quick-look scene-viewer webxr" 
@@ -168,8 +167,7 @@
       autoplay 
       animation-name="*"
       shadow-intensity="1.2"
-      exposure="1.1"
-      scale="1 1 1">
+      exposure="1.1">
       
       <button slot="ar-button" class="ar-launch-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
@@ -179,7 +177,6 @@
   </div>
 
   <div class="controls-card">
-    <!-- Выбор размера -->
     <div>
       <div class="section-title">Размер (мм)</div>
       <div class="size-selector">
@@ -191,7 +188,6 @@
       </div>
     </div>
 
-    <!-- Выбор расцветки -->
     <div>
       <div class="section-title">Расцветка</div>
       <div class="color-grid" id="colorGrid">
@@ -234,9 +230,8 @@
       });
     });
 
-    // Запуск анимации при загрузке
+    // Запуск анимации
     viewer.addEventListener('load', () => {
-      viewer.scale = "1 1 1";
       if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
         viewer.play({ repetitions: Infinity });
       }
