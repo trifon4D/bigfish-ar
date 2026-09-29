@@ -36,7 +36,7 @@
       text-transform: uppercase;
     }
 
-    /* 3D Вьювер */
+    /* 3D Окно */
     .viewer-container {
       width: 100%;
       max-width: 500px;
@@ -89,7 +89,7 @@
       text-align: center;
     }
 
-    /* Кнопки размеров: 50 / 75 / 100 / 140 / 180 */
+    /* Кнопки размеров */
     .size-selector {
       display: flex;
       justify-content: space-between;
@@ -167,7 +167,8 @@
       autoplay 
       animation-name="*"
       shadow-intensity="1.2"
-      exposure="1.1">
+      exposure="1.1"
+      scale="16.67 16.67 16.67">
       
       <button slot="ar-button" class="ar-launch-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
@@ -180,11 +181,11 @@
     <div>
       <div class="section-title">Размер (мм)</div>
       <div class="size-selector">
-        <button class="size-btn" data-scale="0.5">50</button>
-        <button class="size-btn" data-scale="0.75">75</button>
-        <button class="size-btn active" data-scale="1.0">100</button>
-        <button class="size-btn" data-scale="1.4">140</button>
-        <button class="size-btn" data-scale="1.8">180</button>
+        <button class="size-btn" data-scale="8.33">50</button>
+        <button class="size-btn" data-scale="12.5">75</button>
+        <button class="size-btn active" data-scale="16.67">100</button>
+        <button class="size-btn" data-scale="23.33">140</button>
+        <button class="size-btn" data-scale="30.0">180</button>
       </div>
     </div>
 
@@ -210,7 +211,7 @@
     const sizeBtns = document.querySelectorAll('.size-btn');
     const colorSwatches = document.querySelectorAll('.color-swatch');
 
-    // Переключение размера
+    // Клик по размеру
     sizeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         sizeBtns.forEach(b => b.classList.remove('active'));
@@ -220,7 +221,7 @@
       });
     });
 
-    // Переключение расцветки
+    // Клик по расцветке
     colorSwatches.forEach(swatch => {
       swatch.addEventListener('click', () => {
         colorSwatches.forEach(s => s.classList.remove('active'));
@@ -230,8 +231,9 @@
       });
     });
 
-    // Запуск анимации
+    // Принудительный базовый скейл при старте
     viewer.addEventListener('load', () => {
+      viewer.scale = "16.67 16.67 16.67";
       if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
         viewer.play({ repetitions: Infinity });
       }
