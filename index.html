@@ -10,43 +10,48 @@
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
-    body {
+    html, body {
       margin: 0;
       padding: 0;
-      /* Глубокий сумеречный серо-голубой оттенок фона */
+      width: 100%;
+      /* 100dvh решает проблему адаптации под скрывающуюся панель Safari */
+      height: 100dvh;
+      min-height: 100dvh;
       background: #0d131a;
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     header {
       width: 100%;
       text-align: center;
-      padding: 12px 10px 6px;
+      padding-top: max(10px, env(safe-area-inset-top));
+      padding-bottom: 2px;
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-shrink: 0;
     }
-    /* Логотип уменьшен ровно на 30% (было 190px -> стало ~133px) */
     .brand-logo {
-      width: 133px;
-      max-width: 65%;
+      width: 130px;
+      max-width: 60%;
       height: auto;
       display: block;
     }
 
-    /* Верхняя панель выбора моделей */
+    /* Верхняя панель моделей с воздухом от логотипа */
     .model-nav-container {
       width: 100%;
       max-width: 500px;
-      padding: 2px 12px 8px;
+      margin-top: 14px; /* Ощутимый воздух между логотипом и плашками */
+      padding: 0 12px;
       overflow-x: auto;
       scrollbar-width: none;
+      flex-shrink: 0;
     }
     .model-nav-container::-webkit-scrollbar {
       display: none;
@@ -99,23 +104,24 @@
       opacity: 0.45;
     }
 
+    /* 3D область занимает всё свободное пространство по центру */
     .viewer-container {
       width: 100%;
       max-width: 500px;
-      height: 44vh;
+      flex: 1 1 auto;
       position: relative;
+      min-height: 0;
     }
     model-viewer {
       width: 100%;
       height: 100%;
       --poster-color: transparent;
-      /* Сумеречный серо-голубой градиент подложки вьюпорта */
       background: radial-gradient(circle, #1b2432 0%, #0d131a 75%);
     }
 
     .ar-launch-btn {
       position: absolute;
-      top: 12px;
+      top: 10px;
       right: 12px;
       background: #FFF200;
       color: #0d131a;
@@ -129,24 +135,20 @@
       gap: 6px;
       box-shadow: 0 4px 15px rgba(255, 242, 0, 0.4);
       cursor: pointer;
+      z-index: 10;
     }
 
-    /* Нижний блок управления сдвинут вверх, учтена системная шторка Safari/iOS */
+    /* Нижняя панель кнопок: прижата строго вниз, адаптируется по S-кривой */
     .controls-card {
       width: 100%;
       max-width: 500px;
-      padding: 4px 20px calc(14px + env(safe-area-inset-bottom));
+      flex-shrink: 0;
+      margin-top: auto;
+      padding: 6px 16px max(10px, env(safe-area-inset-bottom));
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      /* Плавный переход с выраженной S-образной кривой скорости (easeInOutCubic) */
-      transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1), padding 0.45s cubic-bezier(0.65, 0, 0.35, 1);
-      will-change: transform;
-    }
-
-    /* Состояние, когда интерфейс проныривает вниз по S-кривой при скрытии нижней панели */
-    .controls-card.dock-down {
-      transform: translateY(12px);
+      gap: 10px;
+      transition: all 0.35s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
     .size-selector {
@@ -176,7 +178,7 @@
     .color-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
+      gap: 9px;
       justify-items: center;
     }
     .color-swatch {
@@ -190,11 +192,11 @@
     }
     .color-swatch.active {
       border-color: #fff;
-      transform: scale(1.1);
+      transform: scale(1.08);
       box-shadow: 0 0 14px rgba(255, 255, 255, 0.6);
     }
 
-    /* Точные цвета приманок */
+    /* Точные цвета из карточек */
     .c1  { background: linear-gradient(135deg, #2EB8EE 50%, #44D937 50%); }
     .c2  { background: linear-gradient(135deg, #5EF389 50%, #FF392E 50%); }
     .c3  { background: linear-gradient(135deg, #38781C 50%, #BDF14F 50%); }
@@ -256,8 +258,7 @@
     </model-viewer>
   </div>
 
-  <!-- Блок кнопок без текстовых заголовков -->
-  <div class="controls-card" id="controlsCard">
+  <div class="controls-card">
     <div class="size-selector">
       <button class="size-btn" data-scale="8.33" data-usdz="samets_2.usdz">50мм</button>
       <button class="size-btn" data-scale="12.5" data-usdz="samets_3.usdz">75мм</button>
@@ -284,17 +285,6 @@
     const viewer = document.getElementById('lureViewer');
     const sizeBtns = document.querySelectorAll('.size-btn');
     const colorSwatches = document.querySelectorAll('.color-swatch');
-    const controlsCard = document.getElementById('controlsCard');
-
-    // Отслеживание скрытия панели Safari (динамическое изменение высоты окна)
-    let initialHeight = window.innerHeight;
-    window.addEventListener('resize', () => {
-      if (window.innerHeight > initialHeight + 30) {
-        controlsCard.classList.add('dock-down');
-      } else {
-        controlsCard.classList.remove('dock-down');
-      }
-    });
 
     sizeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
