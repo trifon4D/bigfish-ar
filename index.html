@@ -32,7 +32,8 @@
       align-items: center;
     }
     .brand-logo {
-      max-width: 200px;
+      width: 190px;
+      max-width: 80%;
       height: auto;
       display: block;
     }
@@ -53,14 +54,15 @@
       gap: 8px;
       width: max-content;
       margin: 0 auto;
-      align-items: center;
+      align-items: stretch;
     }
     .model-chip {
       background: #181c24;
       border: 1px solid #2a303d;
       color: #8c96a8;
-      border-radius: 10px;
-      padding: 9px 16px;
+      border-radius: 12px;
+      padding: 6px 16px;
+      min-height: 48px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -70,16 +72,18 @@
       transition: 0.2s;
     }
     .model-chip .chip-name {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       color: inherit;
+      line-height: 1.2;
     }
     .model-chip .chip-badge {
       font-size: 9px;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
       opacity: 0.7;
-      margin-top: 2px;
+      margin-top: 3px;
+      line-height: 1;
     }
     .model-chip.active {
       background: #FFF200;
@@ -203,7 +207,7 @@
 <body>
 
   <header>
-    <img src="logo.png" alt="BIG FISH" class="brand-logo">
+    <img src="logo_bigfish.png" alt="BIG FISH" class="brand-logo">
   </header>
 
   <!-- Верхняя панель выбора моделей -->
