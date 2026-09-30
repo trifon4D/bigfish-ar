@@ -36,7 +36,6 @@
       text-transform: uppercase;
     }
 
-    /* 3D Окно */
     .viewer-container {
       width: 100%;
       max-width: 500px;
@@ -50,7 +49,6 @@
       background: radial-gradient(circle, #252a34 0%, #0f1115 70%);
     }
 
-    /* Кнопка запуска AR */
     .ar-launch-btn {
       position: absolute;
       top: 12px;
@@ -70,7 +68,6 @@
       cursor: pointer;
     }
 
-    /* Панель управления */
     .controls-card {
       width: 100%;
       max-width: 500px;
@@ -89,7 +86,6 @@
       text-align: center;
     }
 
-    /* Кнопки размеров */
     .size-selector {
       display: flex;
       justify-content: space-between;
@@ -114,7 +110,6 @@
       box-shadow: 0 0 12px rgba(0,122,255,0.5);
     }
 
-    /* Кнопки расцветок */
     .color-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -136,7 +131,6 @@
       box-shadow: 0 0 14px rgba(255,255,255,0.6);
     }
 
-    /* Цвета плашек */
     .c1  { background: linear-gradient(135deg, #00d084 50%, #00d084 50%); }
     .c2  { background: linear-gradient(135deg, #00e676 50%, #ff1744 50%); }
     .c3  { background: linear-gradient(135deg, #a7ffeb 50%, #00e676 50%); }
@@ -159,7 +153,7 @@
     <model-viewer 
       id="lureViewer"
       src="samets.glb" 
-      ios-src="samets.usdz"
+      ios-src="samets_4.usdz"
       alt="Приманка UUgor" 
       ar 
       ar-modes="quick-look scene-viewer webxr" 
@@ -182,11 +176,11 @@
     <div>
       <div class="section-title">Размер (мм)</div>
       <div class="size-selector">
-        <button class="size-btn" data-scale="8.33">50</button>
-        <button class="size-btn" data-scale="12.5">75</button>
-        <button class="size-btn active" data-scale="16.67">100</button>
-        <button class="size-btn" data-scale="23.33">140</button>
-        <button class="size-btn" data-scale="30.0">180</button>
+        <button class="size-btn" data-scale="8.33" data-usdz="samets_2.usdz">50</button>
+        <button class="size-btn" data-scale="12.5" data-usdz="samets_3.usdz">75</button>
+        <button class="size-btn active" data-scale="16.67" data-usdz="samets_4.usdz">100</button>
+        <button class="size-btn" data-scale="23.33" data-usdz="samets_5_5.usdz">140</button>
+        <button class="size-btn" data-scale="30.0" data-usdz="samets_7.usdz">180</button>
       </div>
     </div>
 
@@ -212,17 +206,21 @@
     const sizeBtns = document.querySelectorAll('.size-btn');
     const colorSwatches = document.querySelectorAll('.color-swatch');
 
-    // Клик по размеру
     sizeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         sizeBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+
         const s = btn.getAttribute('data-scale');
         viewer.scale = `${s} ${s} ${s}`;
+
+        const usdzFile = btn.getAttribute('data-usdz');
+        if (usdzFile) {
+          viewer.setAttribute('ios-src', usdzFile);
+        }
       });
     });
 
-    // Клик по расцветке
     colorSwatches.forEach(swatch => {
       swatch.addEventListener('click', () => {
         colorSwatches.forEach(s => s.classList.remove('active'));
@@ -232,9 +230,9 @@
       });
     });
 
-    // Фиксация масштаба и автозапуск
     viewer.addEventListener('load', () => {
       viewer.scale = "16.67 16.67 16.67";
+      viewer.setAttribute('ios-src', 'samets_4.usdz');
       if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
         viewer.play({ repetitions: Infinity });
       }
