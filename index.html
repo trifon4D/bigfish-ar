@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>BIG FISH - Каталог AR</title>
+
+  <!-- Подключение Open Sans с поддержкой вариативной ширины wdth -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,300..800&display=swap" rel="stylesheet">
+
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <style>
     * {
@@ -14,12 +20,12 @@
       margin: 0;
       padding: 0;
       width: 100%;
-      /* 100dvh решает проблему адаптации под скрывающуюся панель Safari */
       height: 100dvh;
       min-height: 100dvh;
       background: #0d131a;
       color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-variation-settings: 'wdth' 77;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -43,11 +49,11 @@
       display: block;
     }
 
-    /* Верхняя панель моделей с воздухом от логотипа */
+    /* Верхняя панель выбора моделей */
     .model-nav-container {
       width: 100%;
       max-width: 500px;
-      margin-top: 14px; /* Ощутимый воздух между логотипом и плашками */
+      margin-top: 14px;
       padding: 0 12px;
       overflow-x: auto;
       scrollbar-width: none;
@@ -86,6 +92,7 @@
     }
     .model-chip .chip-badge {
       font-size: 9px;
+      font-weight: 600;
       letter-spacing: 0.8px;
       text-transform: uppercase;
       opacity: 0.7;
@@ -104,7 +111,7 @@
       opacity: 0.45;
     }
 
-    /* 3D область занимает всё свободное пространство по центру */
+    /* Центральная 3D-сцена */
     .viewer-container {
       width: 100%;
       max-width: 500px;
@@ -128,8 +135,11 @@
       border: none;
       padding: 10px 16px;
       border-radius: 20px;
+      font-family: 'Open Sans', sans-serif;
+      font-variation-settings: 'wdth' 77;
       font-size: 13px;
       font-weight: 800;
+      letter-spacing: 0.3px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -138,7 +148,7 @@
       z-index: 10;
     }
 
-    /* Нижняя панель кнопок: прижата строго вниз, адаптируется по S-кривой */
+    /* Нижняя панель переключателей */
     .controls-card {
       width: 100%;
       max-width: 500px;
@@ -163,6 +173,8 @@
       border: 1px solid #253346;
       color: #d1dde8;
       border-radius: 8px;
+      font-family: 'Open Sans', sans-serif;
+      font-variation-settings: 'wdth' 77;
       font-weight: 700;
       font-size: 12px;
       cursor: pointer;
@@ -196,7 +208,7 @@
       box-shadow: 0 0 14px rgba(255, 255, 255, 0.6);
     }
 
-    /* Точные цвета из карточек */
+    /* Цвета приманок */
     .c1  { background: linear-gradient(135deg, #2EB8EE 50%, #44D937 50%); }
     .c2  { background: linear-gradient(135deg, #5EF389 50%, #FF392E 50%); }
     .c3  { background: linear-gradient(135deg, #38781C 50%, #BDF14F 50%); }
