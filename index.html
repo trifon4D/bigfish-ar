@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>BIG FISH - Каталог AR</title>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <style>
@@ -13,7 +13,8 @@
     body {
       margin: 0;
       padding: 0;
-      background: #0f1115;
+      /* Глубокий сумеречный серо-голубой оттенок фона */
+      background: #0d131a;
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
@@ -26,14 +27,15 @@
     header {
       width: 100%;
       text-align: center;
-      padding: 18px 10px 10px;
+      padding: 12px 10px 6px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
+    /* Логотип уменьшен ровно на 30% (было 190px -> стало ~133px) */
     .brand-logo {
-      width: 190px;
-      max-width: 80%;
+      width: 133px;
+      max-width: 65%;
       height: auto;
       display: block;
     }
@@ -42,7 +44,7 @@
     .model-nav-container {
       width: 100%;
       max-width: 500px;
-      padding: 4px 12px 12px;
+      padding: 2px 12px 8px;
       overflow-x: auto;
       scrollbar-width: none;
     }
@@ -57,9 +59,9 @@
       align-items: stretch;
     }
     .model-chip {
-      background: #181c24;
-      border: 1px solid #2a303d;
-      color: #8c96a8;
+      background: #141c26;
+      border: 1px solid #253346;
+      color: #8fa0b8;
       border-radius: 12px;
       padding: 6px 16px;
       min-height: 48px;
@@ -88,13 +90,13 @@
     .model-chip.active {
       background: #FFF200;
       border-color: #FFF200;
-      color: #0f1115;
+      color: #0d131a;
       font-weight: 800;
       box-shadow: 0 4px 14px rgba(255, 242, 0, 0.35);
       cursor: pointer;
     }
     .model-chip.disabled {
-      opacity: 0.5;
+      opacity: 0.45;
     }
 
     .viewer-container {
@@ -107,7 +109,8 @@
       width: 100%;
       height: 100%;
       --poster-color: transparent;
-      background: radial-gradient(circle, #252a34 0%, #0f1115 70%);
+      /* Сумеречный серо-голубой градиент подложки вьюпорта */
+      background: radial-gradient(circle, #1b2432 0%, #0d131a 75%);
     }
 
     .ar-launch-btn {
@@ -115,7 +118,7 @@
       top: 12px;
       right: 12px;
       background: #FFF200;
-      color: #0f1115;
+      color: #0d131a;
       border: none;
       padding: 10px 16px;
       border-radius: 20px;
@@ -128,22 +131,22 @@
       cursor: pointer;
     }
 
+    /* Нижний блок управления сдвинут вверх, учтена системная шторка Safari/iOS */
     .controls-card {
       width: 100%;
       max-width: 500px;
-      padding: 10px 20px 30px;
+      padding: 4px 20px calc(14px + env(safe-area-inset-bottom));
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
+      /* Плавный переход с выраженной S-образной кривой скорости (easeInOutCubic) */
+      transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1), padding 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+      will-change: transform;
     }
 
-    .section-title {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #7a8290;
-      margin-bottom: 8px;
-      text-align: center;
+    /* Состояние, когда интерфейс проныривает вниз по S-кривой при скрытии нижней панели */
+    .controls-card.dock-down {
+      transform: translateY(12px);
     }
 
     .size-selector {
@@ -154,33 +157,33 @@
     .size-btn {
       flex: 1;
       padding: 10px 0;
-      background: #1a1e26;
-      border: 1px solid #2d3340;
-      color: #cfd6e4;
+      background: #141c26;
+      border: 1px solid #253346;
+      color: #d1dde8;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
       transition: 0.2s;
     }
     .size-btn.active {
       background: #FFF200;
       border-color: #FFF200;
-      color: #0f1115;
+      color: #0d131a;
       box-shadow: 0 0 12px rgba(255, 242, 0, 0.45);
     }
 
     .color-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
+      gap: 10px;
       justify-items: center;
     }
     .color-swatch {
-      width: 48px;
-      height: 48px;
+      width: 46px;
+      height: 46px;
       border-radius: 12px;
-      border: 2px solid #2d3340;
+      border: 2px solid #253346;
       cursor: pointer;
       position: relative;
       transition: transform 0.15s, border-color 0.15s;
@@ -191,7 +194,7 @@
       box-shadow: 0 0 14px rgba(255, 255, 255, 0.6);
     }
 
-    /* Точные цвета из карточек */
+    /* Точные цвета приманок */
     .c1  { background: linear-gradient(135deg, #2EB8EE 50%, #44D937 50%); }
     .c2  { background: linear-gradient(135deg, #5EF389 50%, #FF392E 50%); }
     .c3  { background: linear-gradient(135deg, #38781C 50%, #BDF14F 50%); }
@@ -210,7 +213,6 @@
     <img src="logo_bigfish.png" alt="BIG FISH" class="brand-logo">
   </header>
 
-  <!-- Верхняя панель выбора моделей -->
   <div class="model-nav-container">
     <div class="model-nav">
       <div class="model-chip active">
@@ -254,32 +256,27 @@
     </model-viewer>
   </div>
 
-  <div class="controls-card">
-    <div>
-      <div class="section-title">Размер (мм)</div>
-      <div class="size-selector">
-        <button class="size-btn" data-scale="8.33" data-usdz="samets_2.usdz">50</button>
-        <button class="size-btn" data-scale="12.5" data-usdz="samets_3.usdz">75</button>
-        <button class="size-btn active" data-scale="16.67" data-usdz="samets_4.usdz">100</button>
-        <button class="size-btn" data-scale="23.33" data-usdz="samets_5_5.usdz">140</button>
-        <button class="size-btn" data-scale="30.0" data-usdz="samets_7.usdz">180</button>
-      </div>
+  <!-- Блок кнопок без текстовых заголовков -->
+  <div class="controls-card" id="controlsCard">
+    <div class="size-selector">
+      <button class="size-btn" data-scale="8.33" data-usdz="samets_2.usdz">50мм</button>
+      <button class="size-btn" data-scale="12.5" data-usdz="samets_3.usdz">75мм</button>
+      <button class="size-btn active" data-scale="16.67" data-usdz="samets_4.usdz">100мм</button>
+      <button class="size-btn" data-scale="23.33" data-usdz="samets_5_5.usdz">140мм</button>
+      <button class="size-btn" data-scale="30.0" data-usdz="samets_7.usdz">180мм</button>
     </div>
 
-    <div>
-      <div class="section-title">Расцветка</div>
-      <div class="color-grid" id="colorGrid">
-        <div class="color-swatch c1 active" data-variant="samets_color_01"></div>
-        <div class="color-swatch c2" data-variant="samets_color_02"></div>
-        <div class="color-swatch c3" data-variant="samets_color_03"></div>
-        <div class="color-swatch c4" data-variant="samets_color_04"></div>
-        <div class="color-swatch c5" data-variant="samets_color_05"></div>
-        <div class="color-swatch c6" data-variant="samets_color_06"></div>
-        <div class="color-swatch c7" data-variant="samets_color_07"></div>
-        <div class="color-swatch c8" data-variant="samets_color_08"></div>
-        <div class="color-swatch c9" data-variant="samets_color_09"></div>
-        <div class="color-swatch c10" data-variant="samets_color_10"></div>
-      </div>
+    <div class="color-grid" id="colorGrid">
+      <div class="color-swatch c1 active" data-variant="samets_color_01"></div>
+      <div class="color-swatch c2" data-variant="samets_color_02"></div>
+      <div class="color-swatch c3" data-variant="samets_color_03"></div>
+      <div class="color-swatch c4" data-variant="samets_color_04"></div>
+      <div class="color-swatch c5" data-variant="samets_color_05"></div>
+      <div class="color-swatch c6" data-variant="samets_color_06"></div>
+      <div class="color-swatch c7" data-variant="samets_color_07"></div>
+      <div class="color-swatch c8" data-variant="samets_color_08"></div>
+      <div class="color-swatch c9" data-variant="samets_color_09"></div>
+      <div class="color-swatch c10" data-variant="samets_color_10"></div>
     </div>
   </div>
 
@@ -287,6 +284,17 @@
     const viewer = document.getElementById('lureViewer');
     const sizeBtns = document.querySelectorAll('.size-btn');
     const colorSwatches = document.querySelectorAll('.color-swatch');
+    const controlsCard = document.getElementById('controlsCard');
+
+    // Отслеживание скрытия панели Safari (динамическое изменение высоты окна)
+    let initialHeight = window.innerHeight;
+    window.addEventListener('resize', () => {
+      if (window.innerHeight > initialHeight + 30) {
+        controlsCard.classList.add('dock-down');
+      } else {
+        controlsCard.classList.remove('dock-down');
+      }
+    });
 
     sizeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
