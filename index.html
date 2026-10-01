@@ -280,9 +280,10 @@
         glb: "samets.glb",
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
-        // Смещение фокуса камеры в физический центр тела рыбы
-        target: "0m 0m 0.05m",
-        orbit: "0deg 75deg 110%",
+        // Смещаем таргет назад вдоль тела к геометрическому центру рыбы
+        target: "0m 0m -0.055m", 
+        // 65% вернет нормальный крупный размер приманки на экране
+        orbit: "0deg 75deg 65%",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
@@ -308,7 +309,7 @@
         defaultIos: "dangerous_115.usdz",
         defaultScale: "1 1 1",
         target: "auto auto auto",
-        orbit: "0deg 75deg 105%",
+        orbit: "0deg 75deg auto",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
           { name: "115мм", scale: "1.0", usdz: "dangerous_115.usdz", default: true },
@@ -403,7 +404,6 @@
       }
     });
 
-    // Инициализация при первой загрузке
     renderUI('rex');
   </script>
 </body>
