@@ -22,7 +22,7 @@
       width: 100%;
       height: 100dvh;
       min-height: 100dvh;
-      /* Бесшовный монолитный градиент на весь экран без стыков */
+      /* Монолитный бесшовный градиент на весь экран без полос */
       background: radial-gradient(ellipse at 50% 45%, #232832 0%, #111317 70%);
       color: #fff;
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -51,7 +51,7 @@
       display: block;
     }
 
-    /* Верхняя панель моделей: сжата по ширине к центру */
+    /* Верхняя панель моделей */
     .model-nav-container {
       width: 100%;
       max-width: 340px;
@@ -132,6 +132,11 @@
       height: 100%;
       --poster-color: transparent;
       background: transparent;
+    }
+
+    /* Скрываем внутреннюю дефолтную AR-кнопку model-viewer */
+    model-viewer::part(default-ar-button) {
+      display: none !important;
     }
 
     /* Кнопка "В КАМЕРУ" */
@@ -265,6 +270,7 @@
       animation-name="*"
       shadow-intensity="1.2"
       exposure="1.1"
+      camera-target="-0.025m 0m 0m"
       scale="16.67 16.67 16.67">
       
       <!-- Фирменная жёлтая кнопка запуска AR -->
@@ -291,6 +297,8 @@
         glb: "samets.glb",
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
+        // Смещение камеры для компенсации несимметричного хвоста
+        cameraTarget: "-0.025m 0m 0m",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
@@ -315,6 +323,7 @@
         glb: "dangerous.glb",
         defaultIos: "dangerous_115.usdz",
         defaultScale: "1 1 1",
+        cameraTarget: "auto auto auto",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
           { name: "115мм", scale: "1.0", usdz: "dangerous_115.usdz", default: true },
@@ -337,6 +346,7 @@
         glb: "kidcrazy.glb",
         defaultIos: "kidcrazy.usdz",
         defaultScale: "1 1 1",
+        cameraTarget: "auto auto auto",
         sizes: [
           { name: "120мм", scale: "1.0", usdz: "kidcrazy.usdz", default: true }
         ],
@@ -354,6 +364,7 @@
         glb: "valkyrie.glb",
         defaultIos: "Valkyrie.usdz",
         defaultScale: "1 1 1",
+        cameraTarget: "auto auto auto",
         sizes: [
           { name: "200мм", scale: "1.0", usdz: "Valkyrie.usdz", default: true }
         ],
@@ -375,6 +386,7 @@
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
+      viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
 
       // Рендерим кнопки размеров
       sizeSelector.innerHTML = '';
