@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>BIG FISH - Каталог AR</title>
 
-  <!-- Цвета статус-бара Safari в цвет монолитного старта шапки -->
+  <!-- Цвета статус-бара Safari под системную тему -->
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111317">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eaedf2">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -65,7 +65,7 @@
       overflow: hidden;
     }
 
-    /* Блок шапки и навигации */
+    /* Верхняя зона шапки и моделей */
     .top-header-wrapper {
       width: 100%;
       display: flex;
@@ -90,7 +90,6 @@
       padding-bottom: 4px;
     }
 
-    /* Ссылка и центрированный логотип */
     .brand-link {
       display: flex;
       justify-content: center;
@@ -286,11 +285,89 @@
       transform: scale(1.06);
       box-shadow: 0 0 14px var(--shadow-color);
     }
+
+    /* =========================================================
+       АДАПТАЦИЯ ПОД АЛЬБОМНУЮ ОРИЕНТАЦИЮ (LANDSCAPE / ПОВОРОТ)
+       ========================================================= */
+    @media (orientation: landscape) and (max-height: 550px) {
+      body {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: stretch;
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+      }
+
+      /* 3D-сцена забирает левую сторону экрана */
+      .viewer-container {
+        flex: 1 1 60%;
+        max-width: none;
+        height: 100%;
+        order: 1;
+      }
+
+      /* Правая колонка: шапка + навигация + контролы */
+      .top-header-wrapper {
+        width: 320px;
+        max-width: 40%;
+        height: 100%;
+        order: 2;
+        padding: max(8px, env(safe-area-inset-top)) 12px max(8px, env(safe-area-inset-bottom)) 6px;
+        background: transparent;
+        overflow-y: auto;
+        justify-content: flex-start;
+      }
+
+      header {
+        padding-bottom: 4px;
+      }
+      .brand-logo {
+        width: 95px;
+      }
+
+      .model-nav-container {
+        padding: 0;
+        margin: 4px 0 8px 0;
+      }
+      .model-chip {
+        min-height: 36px;
+        padding: 4px 2px;
+      }
+      .model-chip .chip-name {
+        font-size: 10px;
+      }
+
+      .ar-slot-wrapper {
+        margin-top: 6px;
+      }
+      .ar-launch-btn {
+        height: 26px;
+        font-size: 10px;
+      }
+
+      .controls-card {
+        max-width: none;
+        padding: 0;
+        margin-top: 6px;
+        gap: 8px;
+        width: 100%;
+      }
+      .size-btn {
+        height: 32px;
+        font-size: 11px;
+      }
+      .color-grid {
+        gap: 6px;
+      }
+      .color-swatch {
+        border-radius: 8px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div class="top-header-wrapper">
+  <div class="top-header-wrapper" id="topWrapper">
     <header>
       <a href="https://taplink.cc/bigfish" target="_blank" rel="noopener noreferrer" class="brand-link" aria-label="Перейти на Taplink BIG FISH">
         <img src="logo_bigfish.png" alt="BIG FISH" class="brand-logo">
@@ -362,7 +439,7 @@
     </model-viewer>
   </div>
 
-  <div class="controls-card">
+  <div class="controls-card" id="controlsCard">
     <div class="size-selector" id="sizeSelector"></div>
     <div class="color-grid" id="colorGrid"></div>
   </div>
@@ -373,6 +450,30 @@
     const sizeSelector = document.getElementById('sizeSelector');
     const colorGrid = document.getElementById('colorGrid');
     const triggerArBtn = document.getElementById('triggerArBtn');
+    const topWrapper = document.getElementById('topWrapper');
+    const controlsCard = document.getElementById('controlsCard');
+
+    // Перемещение блока управления в правую колонку при перевороте экрана
+    function handleOrientationLayout() {
+      const isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
+      if (isLandscape) {
+        if (!topWrapper.contains(controlsCard)) {
+          topWrapper.appendChild(controlsCard);
+        }
+      } else {
+        if (topWrapper.contains(controlsCard)) {
+          document.body.appendChild(controlsCard);
+        }
+      }
+
+      const data = catalogData[currentModelKey];
+      if (data) {
+        applyZoom(data, false);
+      }
+    }
+
+    window.addEventListener('resize', handleOrientationLayout);
+    window.addEventListener('orientationchange', handleOrientationLayout);
 
     triggerArBtn.addEventListener('click', () => {
       if (viewer.canActivateAR) {
@@ -563,6 +664,7 @@
     });
 
     renderUI('rex');
+    handleOrientationLayout();
   </script>
 </body>
 </html>
