@@ -302,7 +302,21 @@
         padding-right: max(16px, env(safe-area-inset-right));
       }
 
-      /* 3D-сцена слева */
+      /* Логотип крепится к левой стороне сверху */
+      header {
+        position: fixed;
+        left: max(16px, env(safe-area-inset-left));
+        top: max(12px, env(safe-area-inset-top));
+        width: auto;
+        padding: 0;
+        z-index: 40;
+      }
+      .brand-logo {
+        width: 105px;
+        margin: 0;
+      }
+
+      /* 3D-сцена занимает левую и центральную зоны */
       .viewer-container {
         flex: 1 1 auto;
         max-width: none;
@@ -310,41 +324,37 @@
         order: 1;
       }
 
-      /* Правая колонка: шапка сверху, контролы прижаты вниз и влево */
+      /* Правая колонка: плашки прижаты к правому верхнему углу, контролы вниз */
       .top-header-wrapper {
-        width: 320px;
-        max-width: 40%;
+        width: 325px;
+        max-width: 42%;
         height: 100%;
         order: 2;
-        padding: max(8px, env(safe-area-inset-top)) 0 max(8px, env(safe-area-inset-bottom)) 8px;
+        padding: max(10px, env(safe-area-inset-top)) 0 max(8px, env(safe-area-inset-bottom)) 8px;
         background: transparent;
         overflow-y: auto;
         scrollbar-width: none;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        align-items: flex-end;
       }
       .top-header-wrapper::-webkit-scrollbar {
         display: none;
       }
 
-      header {
-        padding-bottom: 2px;
-      }
-      .brand-logo {
-        width: 86px;
-      }
-
+      /* Контейнер с моделями в правом верхнем углу */
       .model-nav-container {
         padding: 0;
-        margin: 4px 0 6px 0;
+        margin: 0 0 6px 0;
         width: 100%;
       }
       .model-nav {
         gap: 5px;
+        justify-content: flex-end;
       }
       .model-chip {
-        min-height: 34px;
+        min-height: 36px;
         padding: 3px 2px;
         border-radius: 8px;
       }
@@ -352,24 +362,21 @@
         font-size: 10px;
       }
 
-      /* Кнопка "в камеру" выносится влево и центрируется по высоте плашек моделей */
+      /* Кнопка "в камеру" остается под Vixen Vox и двигается вместе с ней */
       .ar-slot-wrapper {
-        position: fixed;
-        left: max(16px, env(safe-area-inset-left));
-        top: calc(max(8px, env(safe-area-inset-top)) + 40px);
-        width: auto;
-        margin-top: 0;
-        z-index: 30;
+        position: static;
+        width: 100%;
+        margin-top: 6px;
       }
       .ar-launch-btn {
-        width: auto;
-        padding: 0 14px;
-        height: 34px;
-        border-radius: 17px;
-        font-size: 11px;
+        width: 100%;
+        height: 28px;
+        padding: 0 4px;
+        font-size: 10px;
+        border-radius: 14px;
       }
 
-      /* Размеры и цвета прижаты к нижней левой части правой колонки */
+      /* Размеры и цвета в нижнем правом углу */
       .controls-card {
         max-width: none;
         padding: 0;
@@ -432,6 +439,7 @@
           <div class="model-chip" data-model="vixenvox">
             <span class="chip-name">Vixen Vox</span>
           </div>
+          <!-- Кнопка "в камеру" внутри колонки Vixen Vox -->
           <div class="ar-slot-wrapper" id="arSlotWrapper">
             <button id="triggerArBtn" class="ar-launch-btn">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -466,7 +474,7 @@
       zoom-sensitivity="0.1"
       interpolation-decay="200"
       min-camera-orbit="auto auto 0.4m"
-      max-camera-orbit="Infinity 180deg 15m"
+      max-camera-orbit="Infinity 180deg 6m"
       camera-target="0.14m 0.18m 0m"
       camera-orbit="0deg 80deg 4m"
       field-of-view="auto"
@@ -487,18 +495,6 @@
     const triggerArBtn = document.getElementById('triggerArBtn');
     const topWrapper = document.getElementById('topWrapper');
     const controlsCard = document.getElementById('controlsCard');
-    const arSlotWrapper = document.getElementById('arSlotWrapper');
-    const modelNav = document.getElementById('modelNav');
-
-    function syncLandscapeArButton() {
-      const isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
-      if (isLandscape && modelNav) {
-        const navRect = modelNav.getBoundingClientRect();
-        arSlotWrapper.style.top = `${navRect.top + (navRect.height / 2) - 17}px`;
-      } else {
-        arSlotWrapper.style.top = '';
-      }
-    }
 
     function handleOrientationLayout() {
       const isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
@@ -512,18 +508,13 @@
         }
       }
 
-      syncLandscapeArButton();
-
       const data = catalogData[currentModelKey];
       if (data) {
         applyZoom(data, false);
       }
     }
 
-    window.addEventListener('resize', () => {
-      handleOrientationLayout();
-      syncLandscapeArButton();
-    });
+    window.addEventListener('resize', handleOrientationLayout);
     window.addEventListener('orientationchange', handleOrientationLayout);
 
     triggerArBtn.addEventListener('click', () => {
@@ -716,7 +707,6 @@
 
     renderUI('rex');
     handleOrientationLayout();
-    setTimeout(syncLandscapeArButton, 100);
   </script>
 </body>
 </html>
