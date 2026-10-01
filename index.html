@@ -280,10 +280,9 @@
         glb: "samets.glb",
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
-        // Смещаем таргет назад вдоль тела к геометрическому центру рыбы
-        target: "0m 0m -0.055m", 
-        // 65% вернет нормальный крупный размер приманки на экране
-        orbit: "0deg 75deg 65%",
+        // Смещение фокуса по оси X вправо вдоль рыбы к ее середине:
+        target: "0.052m 0m 0m",
+        orbit: "0deg 75deg 80%",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
@@ -332,6 +331,11 @@
 
     let currentModelKey = 'rex';
 
+    function applyCamera(data) {
+      viewer.cameraTarget = data.target;
+      viewer.cameraOrbit = data.orbit;
+    }
+
     function renderUI(modelKey) {
       const data = catalogData[modelKey];
       currentModelKey = modelKey;
@@ -339,8 +343,7 @@
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
-      viewer.cameraTarget = data.target;
-      viewer.cameraOrbit = data.orbit;
+      applyCamera(data);
 
       // Рендерим кнопки размеров
       sizeSelector.innerHTML = '';
@@ -359,7 +362,7 @@
           const u = btn.getAttribute('data-usdz');
           if (u) viewer.setAttribute('ios-src', u);
           
-          viewer.cameraTarget = data.target;
+          applyCamera(data);
         });
         sizeSelector.appendChild(btn);
       });
@@ -392,8 +395,7 @@
 
     viewer.addEventListener('load', () => {
       const data = catalogData[currentModelKey];
-      viewer.cameraTarget = data.target;
-      viewer.cameraOrbit = data.orbit;
+      applyCamera(data);
 
       if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
         viewer.play({ repetitions: Infinity });
