@@ -137,36 +137,38 @@
       display: none !important;
     }
 
-    /* Кнопка "в камеру" */
+    /* Кнопка "в камеру" выровнена ровно под центром чипа Valkyrie */
     .ar-launch-btn {
       position: absolute;
       top: 10px;
-      right: 16px;
+      right: max(16px, calc((100% - 340px) / 2 + 45px));
+      transform: translateX(50%);
       background: #FFF200;
       color: #111317;
       border: none;
-      padding: 6px 12px;
-      border-radius: 16px;
+      padding: 5px 10px;
+      border-radius: 14px;
       font-family: 'Open Sans', sans-serif;
       font-variation-settings: 'wdth' 77;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
+      line-height: 1.15;
       text-transform: lowercase;
       letter-spacing: normal;
       display: flex;
       align-items: center;
-      gap: 5px;
-      box-shadow: 0 4px 15px rgba(255, 242, 0, 0.4);
+      gap: 4px;
+      box-shadow: 0 3px 12px rgba(255, 242, 0, 0.35);
       cursor: pointer;
       z-index: 10;
       transition: transform 0.15s ease;
     }
     .ar-launch-btn:active {
-      transform: scale(0.95);
+      transform: translateX(50%) scale(0.95);
     }
     .ar-launch-btn svg {
-      width: 14px;
-      height: 14px;
+      width: 11px;
+      height: 11px;
       display: block;
     }
 
@@ -278,16 +280,14 @@
       shadow-softness="0.5"
       exposure="1.0"
       camera-target="0.14m 0.18m 0m"
-      camera-orbit="0deg 75deg 850%"
-      field-of-view="45deg"
+      camera-orbit="0deg 75deg auto"
+      field-of-view="75deg"
       scale="16.67 16.67 16.67">
       
-      <!-- Обновлённая кнопка с маленьким значком и текстом строчными буквами -->
+      <!-- Кнопка со значком 11px, шрифтом 11px и центрированием по Valkyrie -->
       <button slot="ar-button" class="ar-launch-btn">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <!-- Корпус камеры -->
           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <!-- Объектив (внешний круг) -->
           <circle cx="12" cy="13" r="4"/>
         </svg>
         в камеру
@@ -312,8 +312,9 @@
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
         cameraTarget: "0.14m 0.18m 0m",
-        orbit: "0deg 75deg 850%",
-        fov: "45deg",
+        orbit: "0deg 75deg auto",
+        // Угол обзора 75deg принудительно и ощутимо отдаляет модель назад
+        fov: "75deg",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
