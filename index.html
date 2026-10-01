@@ -237,21 +237,13 @@
 
   <div class="model-nav-container">
     <div class="model-nav">
+      <!-- 1. Rex Rocker -->
       <div class="nav-col">
         <div class="model-chip active" data-model="rex">
           <span class="chip-name">Rex Rocker</span>
         </div>
       </div>
-      <div class="nav-col">
-        <div class="model-chip" data-model="dangerous">
-          <span class="chip-name">Dangerous</span>
-        </div>
-      </div>
-      <div class="nav-col">
-        <div class="model-chip" data-model="kidcrazy">
-          <span class="chip-name">Kid Crazy</span>
-        </div>
-      </div>
+      <!-- 2. Valkyrie с кнопкой под ней -->
       <div class="nav-col">
         <div class="model-chip" data-model="valkyrie">
           <span class="chip-name">Valkyrie</span>
@@ -264,6 +256,18 @@
             </svg>
             в камеру
           </button>
+        </div>
+      </div>
+      <!-- 3. Dangerous -->
+      <div class="nav-col">
+        <div class="model-chip" data-model="dangerous">
+          <span class="chip-name">Dangerous</span>
+        </div>
+      </div>
+      <!-- 4. Kid Crazy -->
+      <div class="nav-col">
+        <div class="model-chip" data-model="kidcrazy">
+          <span class="chip-name">Kid Crazy</span>
         </div>
       </div>
     </div>
@@ -319,7 +323,6 @@
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
         cameraTarget: "0.14m 0.18m 0m",
-        // Наклон 80deg (взгляд слегка сверху)
         orbit: "0deg 80deg 4m",
         fov: "auto",
         sizes: [
@@ -340,6 +343,26 @@
           { variant: "samets_color_08", gradient: "linear-gradient(135deg, #106527 50%, #C3BF44 50%)" },
           { variant: "samets_color_09", gradient: "linear-gradient(135deg, #FF3619 33%, #FFFF52 33%, #FFFF52 66%, #44D937 66%)" },
           { variant: "samets_color_10", gradient: "linear-gradient(135deg, #940B3C 50%, #C6A945 50%)" }
+        ]
+      },
+      valkyrie: {
+        glb: "valkyrie.glb",
+        defaultIos: "Valkyrie.usdz",
+        defaultScale: "1 1 1",
+        cameraTarget: "auto auto auto",
+        orbit: "0deg 75deg auto",
+        fov: "auto",
+        sizes: [
+          { name: "200мм", scale: "1.0", usdz: "Valkyrie.usdz", default: true }
+        ],
+        colors: [
+          { variant: "valkyrie_color_01", gradient: "linear-gradient(135deg, #2EB8EE 42%, #FFFFFF 42%, #FFFFFF 58%, #C3EB59 58%)" },
+          { variant: "valkyrie_color_02", gradient: "linear-gradient(135deg, #064E0A 33%, #FFFF52 33%, #FFFF52 66%, #FF3619 66%)" },
+          { variant: "valkyrie_color_03", gradient: "linear-gradient(135deg, #2D2D2C 33%, #4CBE65 33%, #4CBE65 66%, #C6A945 66%)" },
+          { variant: "valkyrie_color_04", gradient: "linear-gradient(135deg, #FF8636 50%, #D2CD43 50%)" },
+          { variant: "valkyrie_color_05", gradient: "linear-gradient(135deg, #44D937 33%, #FFFF52 33%, #FFFF52 66%, #FF3619 66%)" },
+          { variant: "valkyrie_color_06", gradient: "linear-gradient(135deg, #940B3C 50%, #C6A945 50%)" },
+          { variant: "valkyrie_color_07", gradient: "linear-gradient(135deg, #87676D 42%, #C574BD 42%, #C574BD 58%, #C8C6D3 58%)" }
         ]
       },
       dangerous: {
@@ -385,26 +408,6 @@
           { variant: "kidcrazy_color_05", gradient: "linear-gradient(135deg, #0F140C 50%, #F1F8A3 50%)" },
           { variant: "kidcrazy_color_06", gradient: "linear-gradient(135deg, #113109 50%, #67B42D 50%)" },
           { variant: "kidcrazy_color_07", gradient: "linear-gradient(135deg, #106527 50%, #C3BF44 50%)" }
-        ]
-      },
-      valkyrie: {
-        glb: "valkyrie.glb",
-        defaultIos: "Valkyrie.usdz",
-        defaultScale: "1 1 1",
-        cameraTarget: "auto auto auto",
-        orbit: "0deg 75deg auto",
-        fov: "auto",
-        sizes: [
-          { name: "200мм", scale: "1.0", usdz: "Valkyrie.usdz", default: true }
-        ],
-        colors: [
-          { variant: "valkyrie_color_01", gradient: "linear-gradient(135deg, #2EB8EE 42%, #FFFFFF 42%, #FFFFFF 58%, #C3EB59 58%)" },
-          { variant: "valkyrie_color_02", gradient: "linear-gradient(135deg, #064E0A 33%, #FFFF52 33%, #FFFF52 66%, #FF3619 66%)" },
-          { variant: "valkyrie_color_03", gradient: "linear-gradient(135deg, #2D2D2C 33%, #4CBE65 33%, #4CBE65 66%, #C6A945 66%)" },
-          { variant: "valkyrie_color_04", gradient: "linear-gradient(135deg, #FF8636 50%, #D2CD43 50%)" },
-          { variant: "valkyrie_color_05", gradient: "linear-gradient(135deg, #44D937 33%, #FFFF52 33%, #FFFF52 66%, #FF3619 66%)" },
-          { variant: "valkyrie_color_06", gradient: "linear-gradient(135deg, #940B3C 50%, #C6A945 50%)" },
-          { variant: "valkyrie_color_07", gradient: "linear-gradient(135deg, #87676D 42%, #C574BD 42%, #C574BD 58%, #C8C6D3 58%)" }
         ]
       }
     };
