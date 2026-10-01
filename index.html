@@ -137,7 +137,7 @@
       display: none !important;
     }
 
-    /* Кнопка "в камеру" выровнена ровно под центром чипа Valkyrie */
+    /* Кнопка "в камеру" */
     .ar-launch-btn {
       position: absolute;
       top: 10px;
@@ -279,12 +279,12 @@
       shadow-intensity="0.8"
       shadow-softness="0.5"
       exposure="1.0"
+      max-camera-orbit="auto auto 15m"
       camera-target="0.14m 0.18m 0m"
-      camera-orbit="0deg 75deg auto"
-      field-of-view="75deg"
+      camera-orbit="0deg 75deg 1.8m"
+      field-of-view="auto"
       scale="16.67 16.67 16.67">
       
-      <!-- Кнопка со значком 11px, шрифтом 11px и центрированием по Valkyrie -->
       <button slot="ar-button" class="ar-launch-btn">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
@@ -312,9 +312,9 @@
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
         cameraTarget: "0.14m 0.18m 0m",
-        orbit: "0deg 75deg auto",
-        // Угол обзора 75deg принудительно и ощутимо отдаляет модель назад
-        fov: "75deg",
+        // Дистанция в метрах (1.8m) гарантированно отодвигает камеру физически назад
+        orbit: "0deg 75deg 1.8m",
+        fov: "auto",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
