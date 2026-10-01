@@ -23,7 +23,6 @@
       --bg-base: #111317;
       --text-color: #ffffff;
       --chip-bg: #1b1e24;
-      --chip-border: #2b303a;
       --chip-text: #8f96a3;
       --accent-color: #FFF200;
       --accent-contrast: #111317;
@@ -37,7 +36,6 @@
         --bg-base: #eaedf2;
         --text-color: #121417;
         --chip-bg: #ffffff;
-        --chip-border: #cfd5e0;
         --chip-text: #4a5260;
         --accent-color: #FFF200;
         --accent-contrast: #111317;
@@ -92,6 +90,17 @@
       align-items: center;
       padding-bottom: 4px;
     }
+
+    .brand-link {
+      display: inline-block;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    .brand-link:active {
+      transform: scale(0.96);
+      opacity: 0.85;
+    }
     .brand-logo {
       width: 117px;
       max-width: 55%;
@@ -122,9 +131,10 @@
       position: relative;
     }
 
+    /* Без серых рамок у невыбранных */
     .model-chip {
       background: var(--chip-bg);
-      border: 1px solid var(--chip-border);
+      border: none;
       color: var(--chip-text);
       border-radius: 10px;
       padding: 6px 4px;
@@ -148,7 +158,6 @@
     }
     .model-chip.active {
       background: var(--accent-color);
-      border-color: var(--accent-color);
       color: var(--accent-contrast);
       font-weight: 800;
       box-shadow: 0 3px 12px var(--shadow-color);
@@ -231,12 +240,13 @@
       width: 100%;
       justify-content: center;
     }
+    /* Без серых рамок у кнопок размеров */
     .size-btn {
       flex: 1;
       max-width: 140px;
       height: 38px;
       background: var(--chip-bg);
-      border: 1px solid var(--chip-border);
+      border: none;
       color: var(--chip-text);
       border-radius: 8px;
       font-family: 'Open Sans', sans-serif;
@@ -251,7 +261,6 @@
     }
     .size-btn.active {
       background: var(--accent-color);
-      border-color: var(--accent-color);
       color: var(--accent-contrast);
       box-shadow: 0 0 12px var(--shadow-color);
     }
@@ -262,25 +271,22 @@
       gap: 10px;
       width: 100%;
     }
+    /* Без серых рамок у невыбранных цветов */
     .color-swatch {
       width: 100%;
       aspect-ratio: 1 / 1;
       border-radius: 12px;
-      border: 2px solid var(--chip-border);
+      border: none;
       cursor: pointer;
       position: relative;
-      transition: transform 0.15s, border-color 0.15s;
+      transition: transform 0.15s, box-shadow 0.15s;
     }
+    /* Фирменная жёлтая обводка для активного цвета */
     .color-swatch.active {
-      border-color: #fff;
+      outline: 2.5px solid var(--accent-color);
+      outline-offset: -1px;
       transform: scale(1.06);
-      box-shadow: 0 0 14px rgba(255, 255, 255, 0.6);
-    }
-    @media (prefers-color-scheme: light) {
-      .color-swatch.active {
-        border-color: #111317;
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.35);
-      }
+      box-shadow: 0 0 14px var(--shadow-color);
     }
   </style>
 </head>
@@ -288,7 +294,9 @@
 
   <div class="top-header-wrapper">
     <header>
-      <img src="logo_bigfish.png" alt="BIG FISH" class="brand-logo">
+      <a href="https://taplink.cc/bigfish" target="_blank" rel="noopener noreferrer" class="brand-link" aria-label="Перейти на Taplink BIG FISH">
+        <img src="logo_bigfish.png" alt="BIG FISH" class="brand-logo">
+      </a>
     </header>
 
     <div class="model-nav-container">
@@ -311,10 +319,10 @@
             <span class="chip-name">Kid Crazy</span>
           </div>
         </div>
-        <!-- 4. Valkyrie -->
+        <!-- 4. Vixen Vox -->
         <div class="nav-col">
-          <div class="model-chip" data-model="valkyrie">
-            <span class="chip-name">Valkyrie</span>
+          <div class="model-chip" data-model="vixenvox">
+            <span class="chip-name">Vixen Vox</span>
           </div>
           <div class="ar-slot-wrapper">
             <button id="triggerArBtn" class="ar-launch-btn">
@@ -447,7 +455,7 @@
           { variant: "kidcrazy_color_07", gradient: "linear-gradient(135deg, #106527 50%, #C3BF44 50%)" }
         ]
       },
-      valkyrie: {
+      vixenvox: {
         glb: "valkyrie.glb",
         defaultIos: "Valkyrie.usdz",
         defaultScale: "1 1 1",
@@ -508,14 +516,11 @@
           btn.classList.add('active');
           const s = btn.getAttribute('data-scale');
           
-          // Масштаб меняем без перезагрузки GLB
           viewer.scale = `${s} ${s} ${s}`;
 
-          // iOS Quick Look
           const u = btn.getAttribute('data-usdz');
           if (u) viewer.setAttribute('ios-src', u);
           
-          // Возвращаем камеру точно в центр модели
           applyZoom(data, true);
         });
         sizeSelector.appendChild(btn);
