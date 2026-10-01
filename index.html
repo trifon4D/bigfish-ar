@@ -165,7 +165,6 @@
       transition: all 0.35s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
-    /* Сетка размеров: flex для аккуратного выравнивания любого количества кнопок (3 или 5) */
     .size-selector {
       display: flex;
       gap: 10px;
@@ -195,7 +194,6 @@
       box-shadow: 0 0 12px rgba(255, 242, 0, 0.45);
     }
 
-    /* Сетка цветов: 5 колонок */
     .color-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -257,6 +255,8 @@
       animation-name="*"
       shadow-intensity="1.2"
       exposure="1.1"
+      camera-target="auto auto auto"
+      camera-orbit="0deg 75deg auto"
       scale="16.67 16.67 16.67">
       
       <button slot="ar-button" class="ar-launch-btn">
@@ -282,6 +282,8 @@
         glb: "samets.glb",
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
+        cameraTarget: "auto auto auto", // Центрирование по туловищу
+        cameraOrbit: "0deg 75deg auto",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
@@ -305,7 +307,9 @@
       dangerous: {
         glb: "dangerous.glb",
         defaultIos: "dangerous_115.usdz",
-        defaultScale: "1 1 1", // базовая модель опасной уже смоделирована в 1:1
+        defaultScale: "1 1 1",
+        cameraTarget: "auto auto auto", // Центрирование по туловищу
+        cameraOrbit: "0deg 75deg auto",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
           { name: "115мм", scale: "1.0", usdz: "dangerous_115.usdz", default: true },
@@ -332,12 +336,14 @@
       const data = catalogData[modelKey];
       currentModelKey = modelKey;
 
-      // Сменяем 3D-модель
+      // 1. Сменяем модель и настраиваем фокус камеры на центр
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
+      viewer.cameraTarget = data.cameraTarget;
+      viewer.cameraOrbit = data.cameraOrbit;
 
-      // Рендерим кнопки размеров
+      // 2. Рендерим кнопки размеров
       sizeSelector.innerHTML = '';
       data.sizes.forEach(sz => {
         const btn = document.createElement('button');
@@ -353,11 +359,14 @@
           viewer.scale = `${s} ${s} ${s}`;
           const u = btn.getAttribute('data-usdz');
           if (u) viewer.setAttribute('ios-src', u);
+          
+          // Обновляем фокус камеры при изменении размера
+          viewer.cameraTarget = "auto auto auto";
         });
         sizeSelector.appendChild(btn);
       });
 
-      // Рендерим плашки цветов
+      // 3. Рендерим плашки цветов
       colorGrid.innerHTML = '';
       data.colors.forEach((c, index) => {
         const swatch = document.createElement('div');
@@ -374,7 +383,7 @@
       });
     }
 
-    // Слушатель переключения моделей
+    // Слушатель переключения верхних чипов
     modelChips.forEach(chip => {
       chip.addEventListener('click', () => {
         modelChips.forEach(c => c.classList.remove('active'));
@@ -385,6 +394,9 @@
     });
 
     viewer.addEventListener('load', () => {
+      // Принудительно фокусируем камеру на геометрическом центре модели
+      viewer.cameraTarget = "auto auto auto";
+      
       if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
         viewer.play({ repetitions: Infinity });
       }
@@ -394,7 +406,7 @@
       }
     });
 
-    // Старт с Rex Rocker
+    // Запуск первой модели
     renderUI('rex');
   </script>
 </body>
