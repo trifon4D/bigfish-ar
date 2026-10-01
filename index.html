@@ -296,6 +296,7 @@
         glb: "samets.glb",
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
+        // Приближенная камера и компенсация несимметричного хвоста только для Rex Rocker
         cameraTarget: "-0.025m 0m 0m",
         orbit: "0deg 75deg 60%",
         fov: "22deg",
@@ -324,8 +325,8 @@
         defaultIos: "dangerous_115.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
-        orbit: "0deg 75deg 60%",
-        fov: "22deg",
+        orbit: "0deg 75deg auto",
+        fov: "auto",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
           { name: "115мм", scale: "1.0", usdz: "dangerous_115.usdz", default: true },
@@ -349,8 +350,8 @@
         defaultIos: "kidcrazy.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
-        orbit: "0deg 75deg 60%",
-        fov: "22deg",
+        orbit: "0deg 75deg auto",
+        fov: "auto",
         sizes: [
           { name: "120мм", scale: "1.0", usdz: "kidcrazy.usdz", default: true }
         ],
@@ -369,8 +370,8 @@
         defaultIos: "Valkyrie.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
-        orbit: "0deg 75deg 60%",
-        fov: "22deg",
+        orbit: "0deg 75deg auto",
+        fov: "auto",
         sizes: [
           { name: "200мм", scale: "1.0", usdz: "Valkyrie.usdz", default: true }
         ],
@@ -390,8 +391,8 @@
 
     function applyZoom(data) {
       viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
-      viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg 60%');
-      viewer.setAttribute('field-of-view', data.fov || '22deg');
+      viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg auto');
+      viewer.setAttribute('field-of-view', data.fov || 'auto');
       if (viewer.jumpCameraToGoal) {
         viewer.jumpCameraToGoal();
       }
