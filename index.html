@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>BIG FISH - Каталог AR</title>
 
-  <!-- Принудительный апгрейд небезопасных запросов при наличии HTTPS -->
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
   <!-- Цвета статус-бара Safari под системную тему -->
@@ -311,16 +310,18 @@
         order: 1;
       }
 
-      /* Правая колонка: шапка + модели + размеры + цвета */
+      /* Правая колонка: шапка сверху, контролы прижаты вниз и влево */
       .top-header-wrapper {
-        width: 330px;
-        max-width: 42%;
+        width: 320px;
+        max-width: 40%;
         height: 100%;
         order: 2;
-        padding: max(8px, env(safe-area-inset-top)) 0 max(8px, env(safe-area-inset-bottom)) 12px;
+        padding: max(8px, env(safe-area-inset-top)) 0 max(8px, env(safe-area-inset-bottom)) 8px;
         background: transparent;
         overflow-y: auto;
         scrollbar-width: none;
+        display: flex;
+        flex-direction: column;
         justify-content: flex-start;
       }
       .top-header-wrapper::-webkit-scrollbar {
@@ -337,6 +338,7 @@
       .model-nav-container {
         padding: 0;
         margin: 4px 0 6px 0;
+        width: 100%;
       }
       .model-nav {
         gap: 5px;
@@ -354,7 +356,7 @@
       .ar-slot-wrapper {
         position: fixed;
         left: max(16px, env(safe-area-inset-left));
-        top: calc(max(8px, env(safe-area-inset-top)) + 40px); /* Строго по линии высоты плашек */
+        top: calc(max(8px, env(safe-area-inset-top)) + 40px);
         width: auto;
         margin-top: 0;
         z-index: 30;
@@ -367,15 +369,19 @@
         font-size: 11px;
       }
 
+      /* Размеры и цвета прижаты к нижней левой части правой колонки */
       .controls-card {
         max-width: none;
         padding: 0;
-        margin-top: 6px;
+        margin-top: auto; /* Прижимает блок к низу */
         gap: 6px;
         width: 100%;
+        align-items: flex-start; /* Ровняются по левой части */
       }
       .size-selector {
         gap: 6px;
+        width: 100%;
+        justify-content: flex-start; /* Выравнивание размеров по левому краю */
       }
       .size-btn {
         height: 30px;
@@ -384,6 +390,7 @@
       }
       .color-grid {
         gap: 6px;
+        width: 100%;
       }
       .color-swatch {
         border-radius: 8px;
@@ -456,6 +463,8 @@
       shadow-intensity="0.8"
       shadow-softness="0.5"
       exposure="1.0"
+      zoom-sensitivity="0.7"
+      interpolation-decay="100"
       min-camera-orbit="auto auto 0.1m"
       max-camera-orbit="Infinity 180deg 50m"
       camera-target="0.14m 0.18m 0m"
@@ -481,12 +490,10 @@
     const arSlotWrapper = document.getElementById('arSlotWrapper');
     const modelNav = document.getElementById('modelNav');
 
-    // Функция точной калибровки положения кнопки при повороте
     function syncLandscapeArButton() {
       const isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
       if (isLandscape && modelNav) {
         const navRect = modelNav.getBoundingClientRect();
-        // Ровно по вертикальной центральной оси линии плашек
         arSlotWrapper.style.top = `${navRect.top + (navRect.height / 2) - 17}px`;
       } else {
         arSlotWrapper.style.top = '';
