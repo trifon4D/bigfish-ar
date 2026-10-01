@@ -5,24 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>BIG FISH - Каталог AR</title>
 
+  <!-- Адаптивный цвет системного статус-бара под тему устройства -->
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111317">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eaedf2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,300..800&display=swap" rel="stylesheet">
 
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <style>
+    :root {
+      --bg-gradient: radial-gradient(ellipse at 50% 45%, #232832 0%, #111317 70%);
+      --bg-base: #111317;
+      --text-color: #ffffff;
+      --chip-bg: #1b1e24;
+      --chip-border: #2b303a;
+      --chip-text: #8f96a3;
+      --accent-color: #FFF200;
+      --accent-contrast: #111317;
+      --shadow-color: rgba(255, 242, 0, 0.35);
+    }
+
+    /* Адаптивная светлая тема */
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-gradient: radial-gradient(ellipse at 50% 45%, #f4f6f9 0%, #d8dde6 70%);
+        --bg-base: #d8dde6;
+        --text-color: #121417;
+        --chip-bg: #ffffff;
+        --chip-border: #cfd5e0;
+        --chip-text: #4a5260;
+        --accent-color: #FFF200;
+        --accent-contrast: #111317;
+        --shadow-color: rgba(212, 201, 0, 0.45);
+      }
+    }
+
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
+
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100dvh;
       min-height: 100dvh;
-      background: radial-gradient(ellipse at 50% 45%, #232832 0%, #111317 70%);
-      color: #fff;
+      background: var(--bg-base);
+      background-image: var(--bg-gradient);
+      color: var(--text-color);
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-variation-settings: 'wdth' 77;
       display: flex;
@@ -34,7 +69,7 @@
     header {
       width: 100%;
       text-align: center;
-      padding-top: max(8px, env(safe-area-inset-top));
+      padding-top: max(10px, env(safe-area-inset-top));
       padding-bottom: 2px;
       display: flex;
       justify-content: center;
@@ -42,7 +77,6 @@
       flex-shrink: 0;
       z-index: 10;
     }
-    /* Логотип уменьшен на 10% (со 130px до 117px) */
     .brand-logo {
       width: 117px;
       max-width: 55%;
@@ -50,11 +84,11 @@
       display: block;
     }
 
-    /* Верхняя панель моделей выровнена точно по отступам нижней панели (max-width: 500px, padding: 0 16px) */
+    /* Верхняя панель моделей */
     .model-nav-container {
       width: 100%;
       max-width: 500px;
-      margin: 12px auto 0 auto;
+      margin: 10px auto 0 auto;
       padding: 0 16px;
       flex-shrink: 0;
       z-index: 20;
@@ -75,9 +109,9 @@
     }
 
     .model-chip {
-      background: #1b1e24;
-      border: 1px solid #2b303a;
-      color: #8f96a3;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      color: var(--chip-text);
       border-radius: 10px;
       padding: 6px 4px;
       min-height: 42px;
@@ -99,14 +133,14 @@
       white-space: nowrap;
     }
     .model-chip.active {
-      background: #FFF200;
-      border-color: #FFF200;
-      color: #111317;
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      color: var(--accent-contrast);
       font-weight: 800;
-      box-shadow: 0 3px 12px rgba(255, 242, 0, 0.35);
+      box-shadow: 0 3px 12px var(--shadow-color);
     }
 
-    /* Кнопка "в камеру" строго в колонке Valkyrie и ровно в её ширину */
+    /* Кнопка "в камеру" */
     .ar-slot-wrapper {
       width: 100%;
       margin-top: 8px;
@@ -114,8 +148,8 @@
     .ar-launch-btn {
       width: 100%;
       height: 30px;
-      background: #FFF200;
-      color: #111317;
+      background: var(--accent-color);
+      color: var(--accent-contrast);
       border: none;
       padding: 0 4px;
       border-radius: 15px;
@@ -130,7 +164,7 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      box-shadow: 0 3px 12px rgba(255, 242, 0, 0.35);
+      box-shadow: 0 3px 12px var(--shadow-color);
       cursor: pointer;
       transition: transform 0.15s ease;
     }
@@ -187,9 +221,9 @@
       flex: 1;
       max-width: 140px;
       height: 38px;
-      background: #1b1e24;
-      border: 1px solid #2b303a;
-      color: #cfd4dc;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      color: var(--chip-text);
       border-radius: 8px;
       font-family: 'Open Sans', sans-serif;
       font-variation-settings: 'wdth' 77;
@@ -202,10 +236,10 @@
       transition: 0.2s;
     }
     .size-btn.active {
-      background: #FFF200;
-      border-color: #FFF200;
-      color: #111317;
-      box-shadow: 0 0 12px rgba(255, 242, 0, 0.45);
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      color: var(--accent-contrast);
+      box-shadow: 0 0 12px var(--shadow-color);
     }
 
     .color-grid {
@@ -218,7 +252,7 @@
       width: 100%;
       aspect-ratio: 1 / 1;
       border-radius: 12px;
-      border: 2px solid #2b303a;
+      border: 2px solid var(--chip-border);
       cursor: pointer;
       position: relative;
       transition: transform 0.15s, border-color 0.15s;
@@ -227,6 +261,12 @@
       border-color: #fff;
       transform: scale(1.06);
       box-shadow: 0 0 14px rgba(255, 255, 255, 0.6);
+    }
+    @media (prefers-color-scheme: light) {
+      .color-swatch.active {
+        border-color: #111317;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.35);
+      }
     }
   </style>
 </head>
@@ -256,7 +296,7 @@
           <span class="chip-name">Kid Crazy</span>
         </div>
       </div>
-      <!-- 4. Valkyrie с кнопкой под ней -->
+      <!-- 4. Valkyrie -->
       <div class="nav-col">
         <div class="model-chip" data-model="valkyrie">
           <span class="chip-name">Valkyrie</span>
@@ -415,10 +455,17 @@
 
     let currentModelKey = 'rex';
 
-    function applyZoom(data) {
-      viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
-      viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg auto');
-      viewer.setAttribute('field-of-view', data.fov || 'auto');
+    function applyZoom(data, forceReset = false) {
+      if (forceReset) {
+        // Гарантированный сброс цели при вращении модели
+        viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
+        viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg auto');
+        viewer.setAttribute('field-of-view', data.fov || 'auto');
+      } else {
+        if (!viewer.getAttribute('camera-target')) viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
+        if (!viewer.getAttribute('camera-orbit')) viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg auto');
+      }
+
       if (viewer.jumpCameraToGoal) {
         viewer.jumpCameraToGoal();
       }
@@ -431,7 +478,7 @@
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
-      applyZoom(data);
+      applyZoom(data, true);
 
       sizeSelector.innerHTML = '';
       data.sizes.forEach(sz => {
@@ -446,10 +493,17 @@
           btn.classList.add('active');
           const s = btn.getAttribute('data-scale');
           viewer.scale = `${s} ${s} ${s}`;
+
+          // Для Android Scene Viewer: передаём точный выбранный scale в хэш-ссылку
+          const baseGlb = data.glb.split('#')[0];
+          viewer.src = `${baseGlb}#scale=${s},${s},${s}`;
+
+          // Для iOS Quick Look
           const u = btn.getAttribute('data-usdz');
           if (u) viewer.setAttribute('ios-src', u);
           
-          applyZoom(data);
+          // Принудительно возвращаем центрирование камеры Dangerous и других моделей
+          applyZoom(data, true);
         });
         sizeSelector.appendChild(btn);
       });
@@ -481,7 +535,7 @@
 
     viewer.addEventListener('load', () => {
       const data = catalogData[currentModelKey];
-      applyZoom(data);
+      applyZoom(data, false);
 
       if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
         viewer.play({ repetitions: Infinity });
