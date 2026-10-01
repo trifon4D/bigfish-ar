@@ -22,7 +22,6 @@
       width: 100%;
       height: 100dvh;
       min-height: 100dvh;
-      /* Монолитный бесшовный градиент на весь экран без полос */
       background: radial-gradient(ellipse at 50% 45%, #232832 0%, #111317 70%);
       color: #fff;
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -96,6 +95,16 @@
       line-height: 1.15;
       white-space: nowrap;
     }
+    .model-chip .chip-badge {
+      font-size: 7.5px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-top: 2px;
+      line-height: 1;
+      white-space: nowrap;
+    }
     .model-chip.active {
       background: #FFF200;
       border-color: #FFF200;
@@ -124,7 +133,6 @@
       background: transparent;
     }
 
-    /* Скрываем внутреннюю дефолтную AR-кнопку model-viewer */
     model-viewer::part(default-ar-button) {
       display: none !important;
     }
@@ -261,10 +269,10 @@
       shadow-intensity="1.2"
       exposure="1.1"
       camera-target="-0.025m 0m 0m"
-      field-of-view="30deg"
+      camera-orbit="0deg 75deg 60%"
+      field-of-view="22deg"
       scale="16.67 16.67 16.67">
       
-      <!-- Фирменная жёлтая кнопка запуска AR -->
       <button slot="ar-button" class="ar-launch-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
         В КАМЕРУ
@@ -289,7 +297,8 @@
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
         cameraTarget: "-0.025m 0m 0m",
-        fieldOfView: "30deg",
+        orbit: "0deg 75deg 60%",
+        fov: "22deg",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
@@ -315,7 +324,8 @@
         defaultIos: "dangerous_115.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
-        fieldOfView: "30deg",
+        orbit: "0deg 75deg 60%",
+        fov: "22deg",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
           { name: "115мм", scale: "1.0", usdz: "dangerous_115.usdz", default: true },
@@ -339,7 +349,8 @@
         defaultIos: "kidcrazy.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
-        fieldOfView: "30deg",
+        orbit: "0deg 75deg 60%",
+        fov: "22deg",
         sizes: [
           { name: "120мм", scale: "1.0", usdz: "kidcrazy.usdz", default: true }
         ],
@@ -358,7 +369,8 @@
         defaultIos: "Valkyrie.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
-        fieldOfView: "30deg",
+        orbit: "0deg 75deg 60%",
+        fov: "22deg",
         sizes: [
           { name: "200мм", scale: "1.0", usdz: "Valkyrie.usdz", default: true }
         ],
@@ -374,14 +386,25 @@
       }
     };
 
+    let currentModelKey = 'rex';
+
+    function applyZoom(data) {
+      viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
+      viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg 60%');
+      viewer.setAttribute('field-of-view', data.fov || '22deg');
+      if (viewer.jumpCameraToGoal) {
+        viewer.jumpCameraToGoal();
+      }
+    }
+
     function renderUI(modelKey) {
       const data = catalogData[modelKey];
+      currentModelKey = modelKey;
 
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
-      viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
-      viewer.setAttribute('field-of-view', data.fieldOfView || '30deg');
+      applyZoom(data);
 
       // Рендерим кнопки размеров
       sizeSelector.innerHTML = '';
@@ -399,6 +422,8 @@
           viewer.scale = `${s} ${s} ${s}`;
           const u = btn.getAttribute('data-usdz');
           if (u) viewer.setAttribute('ios-src', u);
+          
+          applyZoom(data);
         });
         sizeSelector.appendChild(btn);
       });
@@ -430,6 +455,9 @@
     });
 
     viewer.addEventListener('load', () => {
+      const data = catalogData[currentModelKey];
+      applyZoom(data);
+
       if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
         viewer.play({ repetitions: Infinity });
       }
