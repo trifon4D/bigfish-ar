@@ -50,7 +50,7 @@
       display: block;
     }
 
-    /* Верхняя панель моделей: сжата по ширине к центру */
+    /* Верхняя панель моделей */
     .model-nav-container {
       width: 100%;
       max-width: 340px;
@@ -124,7 +124,7 @@
       flex: 1 1 auto;
       position: relative;
       min-height: 0;
-      overflow: hidden; /* Скрывает выход за границы при смещении */
+      overflow: hidden;
     }
     model-viewer {
       width: 100%;
@@ -134,31 +134,13 @@
       transition: transform 0.25s ease-out;
     }
 
-    /* Класс выравнивания Rex Rocker в геометрический центр */
     .shift-rex {
       transform: translateX(12%);
     }
 
-    .ar-launch-btn {
-      position: absolute;
-      top: 10px;
-      right: 16px;
-      background: #FFF200;
-      color: #111317;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 18px;
-      font-family: 'Open Sans', sans-serif;
-      font-variation-settings: 'wdth' 77;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 15px rgba(255, 242, 0, 0.4);
-      cursor: pointer;
-      z-index: 30;
+    /* Скрываем внутреннюю дефолтную AR-кнопку model-viewer */
+    model-viewer::part(default-ar-button) {
+      display: none !important;
     }
 
     /* Нижняя панель */
@@ -173,6 +155,36 @@
       gap: 10px;
       transition: all 0.35s cubic-bezier(0.65, 0, 0.35, 1);
       z-index: 20;
+    }
+
+    /* Ряд над размерами: кнопка AR прижата вправо (по правому краю 180 мм) */
+    .ar-row {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      padding-right: 0;
+      margin-bottom: -2px;
+    }
+    .ar-circle-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .ar-circle-btn:active {
+      transform: scale(0.92);
+    }
+    .ar-circle-btn svg {
+      width: 26px;
+      height: 26px;
+      display: block;
     }
 
     .size-selector {
@@ -252,10 +264,6 @@
   </div>
 
   <div class="viewer-container">
-    <button class="ar-launch-btn" id="customArBtn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
-      В КАМЕРУ
-    </button>
     <model-viewer 
       id="lureViewer"
       class="shift-rex"
@@ -271,22 +279,43 @@
       shadow-intensity="1.2"
       exposure="1.1"
       scale="16.67 16.67 16.67">
+      <!-- Скрываем внутренний слот -->
+      <div slot="ar-button" style="display: none;"></div>
     </model-viewer>
   </div>
 
   <div class="controls-card">
+    <!-- Кнопка AR: круглая, белая, над плашкой 180 мм -->
+    <div class="ar-row">
+      <button class="ar-circle-btn" id="launchArBtn" aria-label="Открыть в камере">
+        <svg viewBox="0 0 24 24" fill="none">
+          <!-- Уголки рамки видоискателя -->
+          <path d="M4 8V5a1 1 0 0 1 1-1h3" stroke="#111317" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 8V5a1 1 0 0 0-1-1h-3" stroke="#111317" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 16v3a1 1 0 0 0 1 1h3" stroke="#111317" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 16v3a1 1 0 0 1-1 1h-3" stroke="#111317" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Изометрический 3D-куб по центру -->
+          <path d="M12 7.5l4.5 2.5v5l-4.5 2.5l-4.5-2.5v-5z" stroke="#111317" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M12 7.5v10" stroke="#111317" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M12 12.5l4.5-2.5" stroke="#111317" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M12 12.5l-4.5-2.5" stroke="#111317" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
     <div class="size-selector" id="sizeSelector"></div>
     <div class="color-grid" id="colorGrid"></div>
   </div>
 
   <script>
     const viewer = document.getElementById('lureViewer');
-    const customArBtn = document.getElementById('customArBtn');
+    const launchArBtn = document.getElementById('launchArBtn');
     const modelChips = document.querySelectorAll('.model-chip:not(.disabled)');
     const sizeSelector = document.getElementById('sizeSelector');
     const colorGrid = document.getElementById('colorGrid');
 
-    customArBtn.addEventListener('click', () => {
+    // Нажатие на круглую кнопку запускает AR-режим
+    launchArBtn.addEventListener('click', () => {
       viewer.activateAR();
     });
 
@@ -347,8 +376,6 @@
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
-
-      // Применяем выравнивание
       viewer.className = data.shiftClass;
 
       // Рендерим кнопки размеров
