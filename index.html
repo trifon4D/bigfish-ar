@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>BIG FISH - Каталог AR</title>
 
-  <!-- Подключение Open Sans с вариативной шириной wdth: 77 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,300..800&display=swap" rel="stylesheet">
@@ -95,16 +94,6 @@
       line-height: 1.15;
       white-space: nowrap;
     }
-    .model-chip .chip-badge {
-      font-size: 7.5px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      opacity: 0.7;
-      margin-top: 2px;
-      line-height: 1;
-      white-space: nowrap;
-    }
     .model-chip.active {
       background: #FFF200;
       border-color: #FFF200;
@@ -141,8 +130,8 @@
     .ar-launch-btn {
       position: absolute;
       top: 10px;
-      right: max(16px, calc((100% - 340px) / 2 + 45px));
-      transform: translateX(50%);
+      left: 0;
+      transform: translateX(-50%);
       background: #FFF200;
       color: #111317;
       border: none;
@@ -162,9 +151,10 @@
       cursor: pointer;
       z-index: 10;
       transition: transform 0.15s ease;
+      visibility: hidden;
     }
     .ar-launch-btn:active {
-      transform: translateX(50%) scale(0.95);
+      transform: translateX(-50%) scale(0.95);
     }
     .ar-launch-btn svg {
       width: 11px;
@@ -256,7 +246,7 @@
       <div class="model-chip" data-model="kidcrazy">
         <span class="chip-name">Kid Crazy</span>
       </div>
-      <div class="model-chip" data-model="valkyrie">
+      <div class="model-chip" id="valkyrieChip" data-model="valkyrie">
         <span class="chip-name">Valkyrie</span>
       </div>
     </div>
@@ -285,7 +275,7 @@
       field-of-view="auto"
       scale="16.67 16.67 16.67">
       
-      <button slot="ar-button" class="ar-launch-btn">
+      <button slot="ar-button" id="arLaunchBtn" class="ar-launch-btn">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
           <circle cx="12" cy="13" r="4"/>
@@ -305,6 +295,24 @@
     const modelChips = document.querySelectorAll('.model-chip:not(.disabled)');
     const sizeSelector = document.getElementById('sizeSelector');
     const colorGrid = document.getElementById('colorGrid');
+    const arBtn = document.getElementById('arLaunchBtn');
+    const valkyrieChip = document.getElementById('valkyrieChip');
+
+    // Функция точного выравнивания кнопки строго по центру плашки Valkyrie
+    function alignArButton() {
+      if (!valkyrieChip || !arBtn) return;
+      const chipRect = valkyrieChip.getBoundingClientRect();
+      const viewerRect = viewer.getBoundingClientRect();
+      
+      const chipCenterX = chipRect.left + (chipRect.width / 2);
+      const relativeX = chipCenterX - viewerRect.left;
+      
+      arBtn.style.left = `${relativeX}px`;
+      arBtn.style.visibility = 'visible';
+    }
+
+    window.addEventListener('resize', alignArButton);
+    window.addEventListener('load', alignArButton);
 
     const catalogData = {
       rex: {
@@ -312,7 +320,6 @@
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
         cameraTarget: "0.14m 0.18m 0m",
-        // Дистанция в метрах (1.8m) гарантированно отодвигает камеру физически назад
         orbit: "0deg 75deg 1.8m",
         fov: "auto",
         sizes: [
@@ -422,7 +429,6 @@
       viewer.scale = data.defaultScale;
       applyZoom(data);
 
-      // Рендерим кнопки размеров
       sizeSelector.innerHTML = '';
       data.sizes.forEach(sz => {
         const btn = document.createElement('button');
@@ -444,7 +450,6 @@
         sizeSelector.appendChild(btn);
       });
 
-      // Рендерим плашки цветов
       colorGrid.innerHTML = '';
       data.colors.forEach((c, index) => {
         const swatch = document.createElement('div');
@@ -459,6 +464,8 @@
         });
         colorGrid.appendChild(swatch);
       });
+
+      alignArButton();
     }
 
     modelChips.forEach(chip => {
@@ -481,9 +488,11 @@
       if (activeColor) {
         viewer.variantName = activeColor.getAttribute('data-variant');
       }
+      alignArButton();
     });
 
     renderUI('rex');
+    setTimeout(alignArButton, 50);
   </script>
 </body>
 </html>
