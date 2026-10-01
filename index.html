@@ -130,7 +130,7 @@
       background: radial-gradient(circle, #20242c 0%, #111317 75%);
     }
 
-    /* Скрываем дефолтную системную кнопку внутри вьювера */
+    /* Скрываем внутреннюю дефолтную AR-кнопку model-viewer */
     model-viewer::part(default-ar-button) {
       display: none !important;
     }
@@ -148,7 +148,7 @@
       transition: all 0.35s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
-    /* Ряд с круглой AR кнопкой, выровненной по правому краю плашки 180 мм */
+    /* Ряд с круглой AR кнопкой, выровненной по правому краю */
     .ar-row {
       display: flex;
       justify-content: flex-end;
@@ -181,9 +181,11 @@
       display: flex;
       gap: 10px;
       width: 100%;
+      justify-content: center;
     }
     .size-btn {
       flex: 1;
+      max-width: 140px;
       height: 38px;
       background: #1b1e24;
       border: 1px solid #2b303a;
@@ -242,9 +244,8 @@
       <div class="model-chip" data-model="dangerous">
         <span class="chip-name">Dangerous</span>
       </div>
-      <div class="model-chip disabled">
+      <div class="model-chip" data-model="kidcrazy">
         <span class="chip-name">Kid Crazy</span>
-        <span class="chip-badge">Скоро</span>
       </div>
       <div class="model-chip disabled">
         <span class="chip-name">Valkyrie</span>
@@ -348,6 +349,23 @@
           { variant: "dangerous_color_08", gradient: "linear-gradient(135deg, #520E78 0%, #520E78 100%)" },
           { variant: "dangerous_color_09", gradient: "linear-gradient(135deg, #FF392E 50%, #5C782D 50%)" },
           { variant: "dangerous_color_10", gradient: "linear-gradient(135deg, #5D4498 50%, #EB613A 50%)" }
+        ]
+      },
+      kidcrazy: {
+        glb: "kidcrazy.glb",
+        defaultIos: "kidcrazy.usdz",
+        defaultScale: "1 1 1",
+        sizes: [
+          { name: "120мм", scale: "1.0", usdz: "kidcrazy.usdz", default: true }
+        ],
+        colors: [
+          { variant: "kidcrazy_color_01", gradient: "linear-gradient(135deg, #2EB8EE 50%, #44D937 50%)" },
+          { variant: "kidcrazy_color_02", gradient: "linear-gradient(135deg, #2A6040 50%, #D15110 50%)" },
+          { variant: "kidcrazy_color_03", gradient: "linear-gradient(135deg, #C3DF68 50%, #B7A71D 50%)" },
+          { variant: "kidcrazy_color_04", gradient: "linear-gradient(135deg, #FF8636 50%, #D2CD43 50%)" },
+          { variant: "kidcrazy_color_05", gradient: "linear-gradient(135deg, #0F140C 50%, #F1F8A3 50%)" },
+          { variant: "kidcrazy_color_06", gradient: "linear-gradient(135deg, #113109 50%, #67B42D 50%)" },
+          { variant: "kidcrazy_color_07", gradient: "linear-gradient(135deg, #106527 50%, #C3BF44 50%)" }
         ]
       }
     };
