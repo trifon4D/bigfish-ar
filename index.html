@@ -42,25 +42,26 @@
       flex-shrink: 0;
       z-index: 10;
     }
+    /* Логотип уменьшен на 10% (со 130px до 117px) */
     .brand-logo {
-      width: 130px;
-      max-width: 60%;
+      width: 117px;
+      max-width: 55%;
       height: auto;
       display: block;
     }
 
-    /* Верхняя панель моделей */
+    /* Верхняя панель моделей выровнена точно по отступам нижней панели (max-width: 500px, padding: 0 16px) */
     .model-nav-container {
       width: 100%;
-      max-width: 340px;
+      max-width: 500px;
       margin: 12px auto 0 auto;
-      padding: 0 4px;
+      padding: 0 16px;
       flex-shrink: 0;
       z-index: 20;
     }
     .model-nav {
       display: flex;
-      gap: 5px;
+      gap: 6px;
       width: 100%;
       justify-content: center;
       align-items: flex-start;
