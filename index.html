@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>BIG FISH - Каталог AR</title>
 
+  <!-- Принудительный апгрейд небезопасных запросов при наличии HTTPS -->
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
   <!-- Цвета статус-бара Safari под системную тему -->
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111317">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eaedf2">
@@ -63,9 +66,10 @@
       flex-direction: column;
       align-items: center;
       overflow: hidden;
+      position: relative;
     }
 
-    /* Верхняя зона шапки и моделей */
+    /* Верхняя зона шапки и моделей (Портрет) */
     .top-header-wrapper {
       width: 100%;
       display: flex;
@@ -190,6 +194,7 @@
       box-shadow: 0 3px 12px var(--shadow-color);
       cursor: pointer;
       transition: transform 0.15s ease;
+      white-space: nowrap;
     }
     .ar-launch-btn:active {
       transform: scale(0.95);
@@ -287,74 +292,95 @@
     }
 
     /* =========================================================
-       АДАПТАЦИЯ ПОД АЛЬБОМНУЮ ОРИЕНТАЦИЮ (LANDSCAPE / ПОВОРОТ)
+       АДАПТАЦИЯ ПОД ГОРИЗОНТАЛЬНЫЙ ВИД (LANDSCAPE / АЛЬБОМ)
        ========================================================= */
     @media (orientation: landscape) and (max-height: 550px) {
       body {
         flex-direction: row;
         justify-content: space-between;
         align-items: stretch;
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
       }
 
-      /* 3D-сцена забирает левую сторону экрана */
+      /* 3D-сцена слева */
       .viewer-container {
-        flex: 1 1 60%;
+        flex: 1 1 auto;
         max-width: none;
         height: 100%;
         order: 1;
       }
 
-      /* Правая колонка: шапка + навигация + контролы */
+      /* Правая колонка: шапка + модели + размеры + цвета */
       .top-header-wrapper {
-        width: 320px;
-        max-width: 40%;
+        width: 330px;
+        max-width: 42%;
         height: 100%;
         order: 2;
-        padding: max(8px, env(safe-area-inset-top)) 12px max(8px, env(safe-area-inset-bottom)) 6px;
+        padding: max(8px, env(safe-area-inset-top)) 0 max(8px, env(safe-area-inset-bottom)) 12px;
         background: transparent;
         overflow-y: auto;
+        scrollbar-width: none;
         justify-content: flex-start;
+      }
+      .top-header-wrapper::-webkit-scrollbar {
+        display: none;
       }
 
       header {
-        padding-bottom: 4px;
+        padding-bottom: 2px;
       }
       .brand-logo {
-        width: 95px;
+        width: 86px;
       }
 
       .model-nav-container {
         padding: 0;
-        margin: 4px 0 8px 0;
+        margin: 4px 0 6px 0;
+      }
+      .model-nav {
+        gap: 5px;
       }
       .model-chip {
-        min-height: 36px;
-        padding: 4px 2px;
+        min-height: 34px;
+        padding: 3px 2px;
+        border-radius: 8px;
       }
       .model-chip .chip-name {
         font-size: 10px;
       }
 
+      /* Кнопка "в камеру" выносится влево и центрируется по высоте плашек моделей */
       .ar-slot-wrapper {
-        margin-top: 6px;
+        position: fixed;
+        left: max(16px, env(safe-area-inset-left));
+        top: calc(max(8px, env(safe-area-inset-top)) + 40px); /* Строго по линии высоты плашек */
+        width: auto;
+        margin-top: 0;
+        z-index: 30;
       }
       .ar-launch-btn {
-        height: 26px;
-        font-size: 10px;
+        width: auto;
+        padding: 0 14px;
+        height: 34px;
+        border-radius: 17px;
+        font-size: 11px;
       }
 
       .controls-card {
         max-width: none;
         padding: 0;
         margin-top: 6px;
-        gap: 8px;
+        gap: 6px;
         width: 100%;
       }
+      .size-selector {
+        gap: 6px;
+      }
       .size-btn {
-        height: 32px;
+        height: 30px;
         font-size: 11px;
+        border-radius: 6px;
       }
       .color-grid {
         gap: 6px;
@@ -375,7 +401,7 @@
     </header>
 
     <div class="model-nav-container">
-      <div class="model-nav">
+      <div class="model-nav" id="modelNav">
         <!-- 1. Rex Rocker -->
         <div class="nav-col">
           <div class="model-chip active" data-model="rex">
@@ -399,7 +425,7 @@
           <div class="model-chip" data-model="vixenvox">
             <span class="chip-name">Vixen Vox</span>
           </div>
-          <div class="ar-slot-wrapper">
+          <div class="ar-slot-wrapper" id="arSlotWrapper">
             <button id="triggerArBtn" class="ar-launch-btn">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
@@ -452,8 +478,21 @@
     const triggerArBtn = document.getElementById('triggerArBtn');
     const topWrapper = document.getElementById('topWrapper');
     const controlsCard = document.getElementById('controlsCard');
+    const arSlotWrapper = document.getElementById('arSlotWrapper');
+    const modelNav = document.getElementById('modelNav');
 
-    // Перемещение блока управления в правую колонку при перевороте экрана
+    // Функция точной калибровки положения кнопки при повороте
+    function syncLandscapeArButton() {
+      const isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
+      if (isLandscape && modelNav) {
+        const navRect = modelNav.getBoundingClientRect();
+        // Ровно по вертикальной центральной оси линии плашек
+        arSlotWrapper.style.top = `${navRect.top + (navRect.height / 2) - 17}px`;
+      } else {
+        arSlotWrapper.style.top = '';
+      }
+    }
+
     function handleOrientationLayout() {
       const isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
       if (isLandscape) {
@@ -466,13 +505,18 @@
         }
       }
 
+      syncLandscapeArButton();
+
       const data = catalogData[currentModelKey];
       if (data) {
         applyZoom(data, false);
       }
     }
 
-    window.addEventListener('resize', handleOrientationLayout);
+    window.addEventListener('resize', () => {
+      handleOrientationLayout();
+      syncLandscapeArButton();
+    });
     window.addEventListener('orientationchange', handleOrientationLayout);
 
     triggerArBtn.addEventListener('click', () => {
@@ -665,6 +709,7 @@
 
     renderUI('rex');
     handleOrientationLayout();
+    setTimeout(syncLandscapeArButton, 100);
   </script>
 </body>
 </html>
