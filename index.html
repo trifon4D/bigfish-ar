@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>BIG FISH - Каталог AR</title>
 
-  <!-- Адаптивный цвет системного статус-бара под тему устройства -->
+  <!-- Цвета статус-бара Safari в цвет монолитного старта шапки -->
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111317">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eaedf2">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,7 +18,8 @@
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <style>
     :root {
-      --bg-gradient: radial-gradient(ellipse at 50% 45%, #232832 0%, #111317 70%);
+      --safari-top-color: #111317;
+      --bg-gradient: radial-gradient(ellipse at 50% 45%, #232832 0%, #111317 75%);
       --bg-base: #111317;
       --text-color: #ffffff;
       --chip-bg: #1b1e24;
@@ -29,11 +30,11 @@
       --shadow-color: rgba(255, 242, 0, 0.35);
     }
 
-    /* Адаптивная светлая тема */
     @media (prefers-color-scheme: light) {
       :root {
-        --bg-gradient: radial-gradient(ellipse at 50% 45%, #f4f6f9 0%, #d8dde6 70%);
-        --bg-base: #d8dde6;
+        --safari-top-color: #eaedf2;
+        --bg-gradient: radial-gradient(ellipse at 50% 45%, #f4f6f9 0%, #d8dde6 75%);
+        --bg-base: #eaedf2;
         --text-color: #121417;
         --chip-bg: #ffffff;
         --chip-border: #cfd5e0;
@@ -55,7 +56,7 @@
       width: 100%;
       height: 100dvh;
       min-height: 100dvh;
-      background: var(--bg-base);
+      background-color: var(--safari-top-color);
       background-image: var(--bg-gradient);
       color: var(--text-color);
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -66,16 +67,30 @@
       overflow: hidden;
     }
 
+    /* Блок шапки и навигации с мягким градиентом от края Safari до низа плашек */
+    .top-header-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: linear-gradient(to bottom, 
+        var(--safari-top-color) 0%, 
+        var(--safari-top-color) 45%, 
+        transparent 100%
+      );
+      padding-top: max(10px, env(safe-area-inset-top));
+      padding-bottom: 8px;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
     header {
       width: 100%;
       text-align: center;
-      padding-top: max(10px, env(safe-area-inset-top));
-      padding-bottom: 2px;
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-shrink: 0;
-      z-index: 10;
+      padding-bottom: 4px;
     }
     .brand-logo {
       width: 117px;
@@ -88,10 +103,9 @@
     .model-nav-container {
       width: 100%;
       max-width: 500px;
-      margin: 10px auto 0 auto;
+      margin: 6px auto 0 auto;
       padding: 0 16px;
       flex-shrink: 0;
-      z-index: 20;
     }
     .model-nav {
       display: flex;
@@ -272,43 +286,45 @@
 </head>
 <body>
 
-  <header>
-    <img src="logo_bigfish.png" alt="BIG FISH" class="brand-logo">
-  </header>
+  <div class="top-header-wrapper">
+    <header>
+      <img src="logo_bigfish.png" alt="BIG FISH" class="brand-logo">
+    </header>
 
-  <div class="model-nav-container">
-    <div class="model-nav">
-      <!-- 1. Rex Rocker -->
-      <div class="nav-col">
-        <div class="model-chip active" data-model="rex">
-          <span class="chip-name">Rex Rocker</span>
+    <div class="model-nav-container">
+      <div class="model-nav">
+        <!-- 1. Rex Rocker -->
+        <div class="nav-col">
+          <div class="model-chip active" data-model="rex">
+            <span class="chip-name">Rex Rocker</span>
+          </div>
         </div>
-      </div>
-      <!-- 2. Dangerous -->
-      <div class="nav-col">
-        <div class="model-chip" data-model="dangerous">
-          <span class="chip-name">Dangerous</span>
+        <!-- 2. Dangerous -->
+        <div class="nav-col">
+          <div class="model-chip" data-model="dangerous">
+            <span class="chip-name">Dangerous</span>
+          </div>
         </div>
-      </div>
-      <!-- 3. Kid Crazy -->
-      <div class="nav-col">
-        <div class="model-chip" data-model="kidcrazy">
-          <span class="chip-name">Kid Crazy</span>
+        <!-- 3. Kid Crazy -->
+        <div class="nav-col">
+          <div class="model-chip" data-model="kidcrazy">
+            <span class="chip-name">Kid Crazy</span>
+          </div>
         </div>
-      </div>
-      <!-- 4. Valkyrie -->
-      <div class="nav-col">
-        <div class="model-chip" data-model="valkyrie">
-          <span class="chip-name">Valkyrie</span>
-        </div>
-        <div class="ar-slot-wrapper">
-          <button id="triggerArBtn" class="ar-launch-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-              <circle cx="12" cy="13" r="4"/>
-            </svg>
-            в камеру
-          </button>
+        <!-- 4. Valkyrie -->
+        <div class="nav-col">
+          <div class="model-chip" data-model="valkyrie">
+            <span class="chip-name">Valkyrie</span>
+          </div>
+          <div class="ar-slot-wrapper">
+            <button id="triggerArBtn" class="ar-launch-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              в камеру
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -457,7 +473,6 @@
 
     function applyZoom(data, forceReset = false) {
       if (forceReset) {
-        // Гарантированный сброс цели при вращении модели
         viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
         viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg auto');
         viewer.setAttribute('field-of-view', data.fov || 'auto');
@@ -492,17 +507,15 @@
           document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           const s = btn.getAttribute('data-scale');
+          
+          // Масштаб меняем без перезагрузки GLB
           viewer.scale = `${s} ${s} ${s}`;
 
-          // Для Android Scene Viewer: передаём точный выбранный scale в хэш-ссылку
-          const baseGlb = data.glb.split('#')[0];
-          viewer.src = `${baseGlb}#scale=${s},${s},${s}`;
-
-          // Для iOS Quick Look
+          // iOS Quick Look
           const u = btn.getAttribute('data-usdz');
           if (u) viewer.setAttribute('ios-src', u);
           
-          // Принудительно возвращаем центрирование камеры Dangerous и других моделей
+          // Возвращаем камеру точно в центр модели
           applyZoom(data, true);
         });
         sizeSelector.appendChild(btn);
