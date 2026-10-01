@@ -271,18 +271,23 @@
       camera-controls 
       autoplay 
       animation-name="*"
-      shadow-intensity="1.2"
+      environment-image="neutral"
+      tone-mapping="neutral"
+      shadow-intensity="0.8"
+      shadow-softness="0.5"
       exposure="1.0"
       camera-target="0.14m 0.18m 0m"
       camera-orbit="0deg 75deg 105%"
       field-of-view="45deg"
       scale="16.67 16.67 16.67">
       
+      <!-- Обновлённая кнопка с чистым контуром камеры -->
       <button slot="ar-button" class="ar-launch-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Корпус камеры -->
           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <!-- Объектив (внешний круг) -->
           <circle cx="12" cy="13" r="4"/>
-          <circle cx="12" cy="13" r="1.5"/>
         </svg>
         В КАМЕРУ
       </button>
@@ -308,8 +313,6 @@
         cameraTarget: "0.14m 0.18m 0m",
         orbit: "0deg 75deg 105%",
         fov: "45deg",
-        exposure: "1.0",
-        envRotation: "0deg 0deg 0deg",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
@@ -337,9 +340,6 @@
         cameraTarget: "auto auto auto",
         orbit: "0deg 75deg auto",
         fov: "auto",
-        exposure: "0.95",
-        // Вращаем свет на 140 градусов, убирая прямой луч с носа
-        envRotation: "0deg 140deg 0deg",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
           { name: "115мм", scale: "1.0", usdz: "dangerous_115.usdz", default: true },
@@ -365,8 +365,6 @@
         cameraTarget: "auto auto auto",
         orbit: "0deg 75deg auto",
         fov: "auto",
-        exposure: "1.0",
-        envRotation: "0deg 0deg 0deg",
         sizes: [
           { name: "120мм", scale: "1.0", usdz: "kidcrazy.usdz", default: true }
         ],
@@ -387,8 +385,6 @@
         cameraTarget: "auto auto auto",
         orbit: "0deg 75deg auto",
         fov: "auto",
-        exposure: "1.0",
-        envRotation: "0deg 0deg 0deg",
         sizes: [
           { name: "200мм", scale: "1.0", usdz: "Valkyrie.usdz", default: true }
         ],
@@ -410,8 +406,6 @@
       viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
       viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg auto');
       viewer.setAttribute('field-of-view', data.fov || 'auto');
-      viewer.setAttribute('exposure', data.exposure || '1.0');
-      viewer.setAttribute('environment-rotation', data.envRotation || '0deg 0deg 0deg');
       if (viewer.jumpCameraToGoal) {
         viewer.jumpCameraToGoal();
       }
