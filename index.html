@@ -137,7 +137,7 @@
       display: none !important;
     }
 
-    /* Кнопка "В КАМЕРУ" */
+    /* Кнопка "в камеру" */
     .ar-launch-btn {
       position: absolute;
       top: 10px;
@@ -145,16 +145,17 @@
       background: #FFF200;
       color: #111317;
       border: none;
-      padding: 8px 14px;
-      border-radius: 18px;
+      padding: 6px 12px;
+      border-radius: 16px;
       font-family: 'Open Sans', sans-serif;
       font-variation-settings: 'wdth' 77;
       font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
+      font-weight: 700;
+      text-transform: lowercase;
+      letter-spacing: normal;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       box-shadow: 0 4px 15px rgba(255, 242, 0, 0.4);
       cursor: pointer;
       z-index: 10;
@@ -164,8 +165,8 @@
       transform: scale(0.95);
     }
     .ar-launch-btn svg {
-      width: 18px;
-      height: 18px;
+      width: 14px;
+      height: 14px;
       display: block;
     }
 
@@ -277,11 +278,11 @@
       shadow-softness="0.5"
       exposure="1.0"
       camera-target="0.14m 0.18m 0m"
-      camera-orbit="0deg 75deg 650%"
+      camera-orbit="0deg 75deg 850%"
       field-of-view="45deg"
       scale="16.67 16.67 16.67">
       
-      <!-- Обновлённая кнопка с чистым контуром камеры -->
+      <!-- Обновлённая кнопка с маленьким значком и текстом строчными буквами -->
       <button slot="ar-button" class="ar-launch-btn">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <!-- Корпус камеры -->
@@ -289,7 +290,7 @@
           <!-- Объектив (внешний круг) -->
           <circle cx="12" cy="13" r="4"/>
         </svg>
-        В КАМЕРУ
+        в камеру
       </button>
     </model-viewer>
   </div>
@@ -311,8 +312,7 @@
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
         cameraTarget: "0.14m 0.18m 0m",
-        // Отодвинули на шаг назад (650%)
-        orbit: "0deg 75deg 650%",
+        orbit: "0deg 75deg 850%",
         fov: "45deg",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
