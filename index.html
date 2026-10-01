@@ -268,9 +268,9 @@
       animation-name="*"
       shadow-intensity="1.2"
       exposure="1.1"
-      camera-target="0.14m 0.09m 0m"
-      camera-orbit="0deg 75deg 68%"
-      field-of-view="26deg"
+      camera-target="0.14m 0.54m 0m"
+      camera-orbit="0deg 75deg 105%"
+      field-of-view="45deg"
       scale="16.67 16.67 16.67">
       
       <button slot="ar-button" class="ar-launch-btn">
@@ -296,10 +296,10 @@
         glb: "samets.glb",
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
-        // Смещение X: +0.14m (правее), Смещение Y: +0.09m (опускает модель вниз)
-        cameraTarget: "0.14m 0.09m 0m",
-        orbit: "0deg 75deg 68%",
-        fov: "26deg",
+        // Смещение Y увеличено в 6 раз (0.54m), камера отдалена (105% / 45deg)
+        cameraTarget: "0.14m 0.54m 0m",
+        orbit: "0deg 75deg 105%",
+        fov: "45deg",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
