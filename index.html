@@ -55,33 +55,36 @@
       max-width: 340px;
       margin: 12px auto 0 auto;
       padding: 0 4px;
-      overflow-x: auto;
-      scrollbar-width: none;
       flex-shrink: 0;
-      z-index: 10;
-    }
-    .model-nav-container::-webkit-scrollbar {
-      display: none;
+      z-index: 20;
     }
     .model-nav {
       display: flex;
       gap: 5px;
       width: 100%;
       justify-content: center;
-      align-items: stretch;
+      align-items: flex-start;
     }
+    .nav-col {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      position: relative;
+    }
+
     .model-chip {
       background: #1b1e24;
       border: 1px solid #2b303a;
       color: #8f96a3;
       border-radius: 10px;
-      padding: 6px 8px;
+      padding: 6px 4px;
       min-height: 42px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      flex: 1 1 0;
+      width: 100%;
       text-align: center;
       cursor: pointer;
       user-select: none;
@@ -101,9 +104,42 @@
       font-weight: 800;
       box-shadow: 0 3px 12px rgba(255, 242, 0, 0.35);
     }
-    .model-chip.disabled {
-      opacity: 0.45;
-      cursor: default;
+
+    /* Кнопка "в камеру" строго в колонке Valkyrie и ровно в её ширину */
+    .ar-slot-wrapper {
+      width: 100%;
+      margin-top: 8px;
+    }
+    .ar-launch-btn {
+      width: 100%;
+      height: 30px;
+      background: #FFF200;
+      color: #111317;
+      border: none;
+      padding: 0 4px;
+      border-radius: 15px;
+      font-family: 'Open Sans', sans-serif;
+      font-variation-settings: 'wdth' 77;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+      text-transform: lowercase;
+      letter-spacing: normal;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 3px 12px rgba(255, 242, 0, 0.35);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .ar-launch-btn:active {
+      transform: scale(0.95);
+    }
+    .ar-launch-btn svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
     }
 
     /* Центральная 3D-сцена */
@@ -124,42 +160,6 @@
 
     model-viewer::part(default-ar-button) {
       display: none !important;
-    }
-
-    /* Кнопка "в камеру" */
-    .ar-launch-btn {
-      position: absolute;
-      top: 10px;
-      left: 0;
-      transform: translateX(-50%);
-      background: #FFF200;
-      color: #111317;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 14px;
-      font-family: 'Open Sans', sans-serif;
-      font-variation-settings: 'wdth' 77;
-      font-size: 11px;
-      font-weight: 700;
-      line-height: 1.15;
-      text-transform: lowercase;
-      letter-spacing: normal;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      box-shadow: 0 3px 12px rgba(255, 242, 0, 0.35);
-      cursor: pointer;
-      z-index: 10;
-      transition: transform 0.15s ease;
-      visibility: hidden;
-    }
-    .ar-launch-btn:active {
-      transform: translateX(-50%) scale(0.95);
-    }
-    .ar-launch-btn svg {
-      width: 11px;
-      height: 11px;
-      display: block;
     }
 
     /* Нижняя панель */
@@ -237,17 +237,34 @@
 
   <div class="model-nav-container">
     <div class="model-nav">
-      <div class="model-chip active" data-model="rex">
-        <span class="chip-name">Rex Rocker</span>
+      <div class="nav-col">
+        <div class="model-chip active" data-model="rex">
+          <span class="chip-name">Rex Rocker</span>
+        </div>
       </div>
-      <div class="model-chip" data-model="dangerous">
-        <span class="chip-name">Dangerous</span>
+      <div class="nav-col">
+        <div class="model-chip" data-model="dangerous">
+          <span class="chip-name">Dangerous</span>
+        </div>
       </div>
-      <div class="model-chip" data-model="kidcrazy">
-        <span class="chip-name">Kid Crazy</span>
+      <div class="nav-col">
+        <div class="model-chip" data-model="kidcrazy">
+          <span class="chip-name">Kid Crazy</span>
+        </div>
       </div>
-      <div class="model-chip" id="valkyrieChip" data-model="valkyrie">
-        <span class="chip-name">Valkyrie</span>
+      <div class="nav-col">
+        <div class="model-chip" data-model="valkyrie">
+          <span class="chip-name">Valkyrie</span>
+        </div>
+        <div class="ar-slot-wrapper">
+          <button id="triggerArBtn" class="ar-launch-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            в камеру
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -269,19 +286,12 @@
       shadow-intensity="0.8"
       shadow-softness="0.5"
       exposure="1.0"
-      max-camera-orbit="auto auto 15m"
+      min-camera-orbit="auto auto 0.1m"
+      max-camera-orbit="Infinity 180deg 50m"
       camera-target="0.14m 0.18m 0m"
-      camera-orbit="0deg 75deg 1.8m"
+      camera-orbit="0deg 75deg 10.8m"
       field-of-view="auto"
       scale="16.67 16.67 16.67">
-      
-      <button slot="ar-button" id="arLaunchBtn" class="ar-launch-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-        в камеру
-      </button>
     </model-viewer>
   </div>
 
@@ -292,27 +302,16 @@
 
   <script>
     const viewer = document.getElementById('lureViewer');
-    const modelChips = document.querySelectorAll('.model-chip:not(.disabled)');
+    const modelChips = document.querySelectorAll('.model-chip');
     const sizeSelector = document.getElementById('sizeSelector');
     const colorGrid = document.getElementById('colorGrid');
-    const arBtn = document.getElementById('arLaunchBtn');
-    const valkyrieChip = document.getElementById('valkyrieChip');
+    const triggerArBtn = document.getElementById('triggerArBtn');
 
-    // Функция точного выравнивания кнопки строго по центру плашки Valkyrie
-    function alignArButton() {
-      if (!valkyrieChip || !arBtn) return;
-      const chipRect = valkyrieChip.getBoundingClientRect();
-      const viewerRect = viewer.getBoundingClientRect();
-      
-      const chipCenterX = chipRect.left + (chipRect.width / 2);
-      const relativeX = chipCenterX - viewerRect.left;
-      
-      arBtn.style.left = `${relativeX}px`;
-      arBtn.style.visibility = 'visible';
-    }
-
-    window.addEventListener('resize', alignArButton);
-    window.addEventListener('load', alignArButton);
+    triggerArBtn.addEventListener('click', () => {
+      if (viewer.canActivateAR) {
+        viewer.activateAR();
+      }
+    });
 
     const catalogData = {
       rex: {
@@ -320,7 +319,8 @@
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
         cameraTarget: "0.14m 0.18m 0m",
-        orbit: "0deg 75deg 1.8m",
+        // Камера физически отодвинута в 6 раз дальше (10.8 метра)
+        orbit: "0deg 75deg 10.8m",
         fov: "auto",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
@@ -464,8 +464,6 @@
         });
         colorGrid.appendChild(swatch);
       });
-
-      alignArButton();
     }
 
     modelChips.forEach(chip => {
@@ -488,11 +486,9 @@
       if (activeColor) {
         viewer.variantName = activeColor.getAttribute('data-variant');
       }
-      alignArButton();
     });
 
     renderUI('rex');
-    setTimeout(alignArButton, 50);
   </script>
 </body>
 </html>
