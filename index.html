@@ -65,7 +65,7 @@
       overflow: hidden;
     }
 
-    /* Блок шапки и навигации с мягким градиентом от края Safari до низа плашек */
+    /* Блок шапки и навигации */
     .top-header-wrapper {
       width: 100%;
       display: flex;
@@ -84,15 +84,17 @@
 
     header {
       width: 100%;
-      text-align: center;
       display: flex;
       justify-content: center;
       align-items: center;
       padding-bottom: 4px;
     }
 
+    /* Ссылка и центрированный логотип */
     .brand-link {
-      display: inline-block;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       text-decoration: none;
       cursor: pointer;
       transition: transform 0.15s ease, opacity 0.15s ease;
@@ -103,9 +105,9 @@
     }
     .brand-logo {
       width: 117px;
-      max-width: 55%;
       height: auto;
       display: block;
+      margin: 0 auto;
     }
 
     /* Верхняя панель моделей */
@@ -131,7 +133,6 @@
       position: relative;
     }
 
-    /* Без серых рамок у невыбранных */
     .model-chip {
       background: var(--chip-bg);
       border: none;
@@ -240,7 +241,6 @@
       width: 100%;
       justify-content: center;
     }
-    /* Без серых рамок у кнопок размеров */
     .size-btn {
       flex: 1;
       max-width: 140px;
@@ -271,7 +271,6 @@
       gap: 10px;
       width: 100%;
     }
-    /* Без серых рамок у невыбранных цветов */
     .color-swatch {
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -281,7 +280,6 @@
       position: relative;
       transition: transform 0.15s, box-shadow 0.15s;
     }
-    /* Фирменная жёлтая обводка для активного цвета */
     .color-swatch.active {
       outline: 2.5px solid var(--accent-color);
       outline-offset: -1px;
