@@ -255,8 +255,6 @@
       animation-name="*"
       shadow-intensity="1.2"
       exposure="1.1"
-      camera-target="auto auto auto"
-      camera-orbit="0deg 75deg auto"
       scale="16.67 16.67 16.67">
       
       <button slot="ar-button" class="ar-launch-btn">
@@ -282,8 +280,9 @@
         glb: "samets.glb",
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
-        cameraTarget: "auto auto auto", // Центрирование по туловищу
-        cameraOrbit: "0deg 75deg auto",
+        // Смещение фокуса камеры в физический центр тела рыбы
+        target: "0m 0m 0.05m",
+        orbit: "0deg 75deg 110%",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
@@ -308,8 +307,8 @@
         glb: "dangerous.glb",
         defaultIos: "dangerous_115.usdz",
         defaultScale: "1 1 1",
-        cameraTarget: "auto auto auto", // Центрирование по туловищу
-        cameraOrbit: "0deg 75deg auto",
+        target: "auto auto auto",
+        orbit: "0deg 75deg 105%",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
           { name: "115мм", scale: "1.0", usdz: "dangerous_115.usdz", default: true },
@@ -336,14 +335,13 @@
       const data = catalogData[modelKey];
       currentModelKey = modelKey;
 
-      // 1. Сменяем модель и настраиваем фокус камеры на центр
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
-      viewer.cameraTarget = data.cameraTarget;
-      viewer.cameraOrbit = data.cameraOrbit;
+      viewer.cameraTarget = data.target;
+      viewer.cameraOrbit = data.orbit;
 
-      // 2. Рендерим кнопки размеров
+      // Рендерим кнопки размеров
       sizeSelector.innerHTML = '';
       data.sizes.forEach(sz => {
         const btn = document.createElement('button');
@@ -360,13 +358,12 @@
           const u = btn.getAttribute('data-usdz');
           if (u) viewer.setAttribute('ios-src', u);
           
-          // Обновляем фокус камеры при изменении размера
-          viewer.cameraTarget = "auto auto auto";
+          viewer.cameraTarget = data.target;
         });
         sizeSelector.appendChild(btn);
       });
 
-      // 3. Рендерим плашки цветов
+      // Рендерим плашки цветов
       colorGrid.innerHTML = '';
       data.colors.forEach((c, index) => {
         const swatch = document.createElement('div');
@@ -383,7 +380,6 @@
       });
     }
 
-    // Слушатель переключения верхних чипов
     modelChips.forEach(chip => {
       chip.addEventListener('click', () => {
         modelChips.forEach(c => c.classList.remove('active'));
@@ -394,9 +390,10 @@
     });
 
     viewer.addEventListener('load', () => {
-      // Принудительно фокусируем камеру на геометрическом центре модели
-      viewer.cameraTarget = "auto auto auto";
-      
+      const data = catalogData[currentModelKey];
+      viewer.cameraTarget = data.target;
+      viewer.cameraOrbit = data.orbit;
+
       if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
         viewer.play({ repetitions: Infinity });
       }
@@ -406,7 +403,7 @@
       }
     });
 
-    // Запуск первой модели
+    // Инициализация при первой загрузке
     renderUI('rex');
   </script>
 </body>
