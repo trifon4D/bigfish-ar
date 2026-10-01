@@ -96,16 +96,6 @@
       line-height: 1.15;
       white-space: nowrap;
     }
-    .model-chip .chip-badge {
-      font-size: 7.5px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      opacity: 0.7;
-      margin-top: 2px;
-      line-height: 1;
-      white-space: nowrap;
-    }
     .model-chip.active {
       background: #FFF200;
       border-color: #FFF200;
@@ -271,6 +261,7 @@
       shadow-intensity="1.2"
       exposure="1.1"
       camera-target="-0.025m 0m 0m"
+      field-of-view="30deg"
       scale="16.67 16.67 16.67">
       
       <!-- Фирменная жёлтая кнопка запуска AR -->
@@ -297,8 +288,8 @@
         glb: "samets.glb",
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
-        // Смещение камеры для компенсации несимметричного хвоста
         cameraTarget: "-0.025m 0m 0m",
+        fieldOfView: "30deg",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
@@ -324,6 +315,7 @@
         defaultIos: "dangerous_115.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
+        fieldOfView: "30deg",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
           { name: "115мм", scale: "1.0", usdz: "dangerous_115.usdz", default: true },
@@ -347,6 +339,7 @@
         defaultIos: "kidcrazy.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
+        fieldOfView: "30deg",
         sizes: [
           { name: "120мм", scale: "1.0", usdz: "kidcrazy.usdz", default: true }
         ],
@@ -365,6 +358,7 @@
         defaultIos: "Valkyrie.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
+        fieldOfView: "30deg",
         sizes: [
           { name: "200мм", scale: "1.0", usdz: "Valkyrie.usdz", default: true }
         ],
@@ -387,6 +381,7 @@
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
       viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
+      viewer.setAttribute('field-of-view', data.fieldOfView || '30deg');
 
       // Рендерим кнопки размеров
       sizeSelector.innerHTML = '';
