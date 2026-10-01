@@ -41,7 +41,6 @@
       justify-content: center;
       align-items: center;
       flex-shrink: 0;
-      z-index: 20;
     }
     .brand-logo {
       width: 130px;
@@ -50,7 +49,7 @@
       display: block;
     }
 
-    /* Верхняя панель моделей */
+    /* Верхняя панель моделей: сжата по ширине к центру */
     .model-nav-container {
       width: 100%;
       max-width: 340px;
@@ -59,7 +58,6 @@
       overflow-x: auto;
       scrollbar-width: none;
       flex-shrink: 0;
-      z-index: 20;
     }
     .model-nav-container::-webkit-scrollbar {
       display: none;
@@ -124,21 +122,15 @@
       flex: 1 1 auto;
       position: relative;
       min-height: 0;
-      overflow: hidden;
     }
     model-viewer {
       width: 100%;
       height: 100%;
       --poster-color: transparent;
       background: radial-gradient(circle, #20242c 0%, #111317 75%);
-      transition: transform 0.25s ease-out;
     }
 
-    .shift-rex {
-      transform: translateX(12%);
-    }
-
-    /* Скрываем внутреннюю дефолтную AR-кнопку model-viewer */
+    /* Скрываем дефолтную системную кнопку внутри вьювера */
     model-viewer::part(default-ar-button) {
       display: none !important;
     }
@@ -154,15 +146,13 @@
       flex-direction: column;
       gap: 10px;
       transition: all 0.35s cubic-bezier(0.65, 0, 0.35, 1);
-      z-index: 20;
     }
 
-    /* Ряд над размерами: кнопка AR прижата вправо (по правому краю 180 мм) */
+    /* Ряд с круглой AR кнопкой, выровненной по правому краю плашки 180 мм */
     .ar-row {
       display: flex;
       justify-content: flex-end;
       width: 100%;
-      padding-right: 0;
       margin-bottom: -2px;
     }
     .ar-circle-btn {
@@ -176,7 +166,7 @@
       justify-content: center;
       cursor: pointer;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.15s ease;
     }
     .ar-circle-btn:active {
       transform: scale(0.92);
@@ -266,7 +256,6 @@
   <div class="viewer-container">
     <model-viewer 
       id="lureViewer"
-      class="shift-rex"
       src="samets.glb" 
       ios-src="samets_4.usdz"
       alt="Рыболовная приманка BIG FISH" 
@@ -279,22 +268,18 @@
       shadow-intensity="1.2"
       exposure="1.1"
       scale="16.67 16.67 16.67">
-      <!-- Скрываем внутренний слот -->
       <div slot="ar-button" style="display: none;"></div>
     </model-viewer>
   </div>
 
   <div class="controls-card">
-    <!-- Кнопка AR: круглая, белая, над плашкой 180 мм -->
     <div class="ar-row">
       <button class="ar-circle-btn" id="launchArBtn" aria-label="Открыть в камере">
         <svg viewBox="0 0 24 24" fill="none">
-          <!-- Уголки рамки видоискателя -->
           <path d="M4 8V5a1 1 0 0 1 1-1h3" stroke="#111317" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M20 8V5a1 1 0 0 0-1-1h-3" stroke="#111317" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M4 16v3a1 1 0 0 0 1 1h3" stroke="#111317" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M20 16v3a1 1 0 0 1-1 1h-3" stroke="#111317" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- Изометрический 3D-куб по центру -->
           <path d="M12 7.5l4.5 2.5v5l-4.5 2.5l-4.5-2.5v-5z" stroke="#111317" stroke-width="2" stroke-linejoin="round"/>
           <path d="M12 7.5v10" stroke="#111317" stroke-width="2" stroke-linejoin="round"/>
           <path d="M12 12.5l4.5-2.5" stroke="#111317" stroke-width="2" stroke-linejoin="round"/>
@@ -314,7 +299,6 @@
     const sizeSelector = document.getElementById('sizeSelector');
     const colorGrid = document.getElementById('colorGrid');
 
-    // Нажатие на круглую кнопку запускает AR-режим
     launchArBtn.addEventListener('click', () => {
       viewer.activateAR();
     });
@@ -324,7 +308,6 @@
         glb: "samets.glb",
         defaultIos: "samets_4.usdz",
         defaultScale: "16.67 16.67 16.67",
-        shiftClass: "shift-rex",
         sizes: [
           { name: "50мм", scale: "8.33", usdz: "samets_2.usdz" },
           { name: "75мм", scale: "12.5", usdz: "samets_3.usdz" },
@@ -349,7 +332,6 @@
         glb: "dangerous.glb",
         defaultIos: "dangerous_115.usdz",
         defaultScale: "1 1 1",
-        shiftClass: "",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
           { name: "115мм", scale: "1.0", usdz: "dangerous_115.usdz", default: true },
@@ -376,7 +358,6 @@
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
-      viewer.className = data.shiftClass;
 
       // Рендерим кнопки размеров
       sizeSelector.innerHTML = '';
