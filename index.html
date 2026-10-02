@@ -296,9 +296,7 @@
       box-shadow: 0 0 14px var(--shadow-color);
     }
 
-    /* =========================================================
-       АДАПТАЦИЯ ПОД ГОРИЗОНТАЛЬНЫЙ ВИД (LANDSCAPE / АЛЬБОМ)
-       ========================================================= */
+    /* Адаптация под горизонтальный вид */
     @media (orientation: landscape) and (max-height: 550px) {
       body {
         flex-direction: row;
@@ -308,7 +306,6 @@
         padding-right: max(16px, env(safe-area-inset-right));
       }
 
-      /* Логотип крепится к левой стороне сверху */
       header {
         position: fixed;
         left: max(16px, env(safe-area-inset-left));
@@ -322,7 +319,6 @@
         margin: 0;
       }
 
-      /* 3D-сцена занимает левую и центральную зоны */
       .viewer-container {
         flex: 1 1 auto;
         max-width: none;
@@ -330,7 +326,6 @@
         order: 1;
       }
 
-      /* Правая колонка: плашки прижаты к правому верхнему углу, контролы вниз */
       .top-header-wrapper {
         width: 325px;
         max-width: 42%;
@@ -349,7 +344,6 @@
         display: none;
       }
 
-      /* Контейнер с моделями в правом верхнем углу */
       .model-nav-container {
         padding: 0;
         margin: 0 0 6px 0;
@@ -368,7 +362,6 @@
         font-size: 10px;
       }
 
-      /* Кнопка "в камеру" остается под Vixen Vox и двигается вместе с ней */
       .ar-slot-wrapper {
         position: static;
         width: 100%;
@@ -382,7 +375,6 @@
         border-radius: 14px;
       }
 
-      /* Размеры и цвета в нижнем правом углу */
       .controls-card {
         max-width: none;
         padding: 0;
@@ -445,7 +437,6 @@
           <div class="model-chip" data-model="vixenvox">
             <span class="chip-name">Vixen Vox</span>
           </div>
-          <!-- Кнопка "в камеру" внутри колонки Vixen Vox -->
           <div class="ar-slot-wrapper" id="arSlotWrapper">
             <button id="triggerArBtn" class="ar-launch-btn">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -479,7 +470,7 @@
       exposure="1.0"
       zoom-sensitivity="0.1"
       interpolation-decay="200"
-      min-camera-orbit="auto auto 0.4m"
+      min-camera-orbit="auto auto 0.05m"
       max-camera-orbit="Infinity 180deg 6m"
       camera-target="0.14m 0.18m 0m"
       camera-orbit="0deg 80deg 4m"
@@ -502,6 +493,27 @@
     const topWrapper = document.getElementById('topWrapper');
     const controlsCard = document.getElementById('controlsCard');
 
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    triggerArBtn.addEventListener('click', () => {
+      const iosSrc = viewer.getAttribute('ios-src');
+      if (isIOS && iosSrc) {
+        const absoluteUrl = new URL(iosSrc, window.location.href).href;
+        const anchor = document.createElement('a');
+        anchor.setAttribute('rel', 'ar');
+        anchor.setAttribute('href', absoluteUrl);
+        anchor.appendChild(document.createElement('img'));
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+      } else {
+        if (viewer.canActivateAR) {
+          viewer.activateAR();
+        }
+      }
+    });
+
     function handleOrientationLayout() {
       const isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
       if (isLandscape) {
@@ -522,12 +534,6 @@
 
     window.addEventListener('resize', handleOrientationLayout);
     window.addEventListener('orientationchange', handleOrientationLayout);
-
-    triggerArBtn.addEventListener('click', () => {
-      if (viewer.canActivateAR) {
-        viewer.activateAR();
-      }
-    });
 
     const catalogData = {
       rex: {
@@ -562,7 +568,8 @@
         defaultIos: "dangerous_115.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
-        orbit: "0deg 75deg auto",
+        // Точный расчётный радиус: 0.18m возвращает исходный крупный вид
+        orbit: "0deg 80deg 0.18m",
         fov: "auto",
         sizes: [
           { name: "75мм", scale: "0.652", usdz: "dangerous_75.usdz" },
@@ -587,7 +594,8 @@
         defaultIos: "kidcrazy.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
-        orbit: "0deg 75deg auto",
+        // Точный расчётный радиус: 0.18m возвращает исходный крупный вид
+        orbit: "0deg 80deg 0.18m",
         fov: "auto",
         sizes: [
           { name: "120мм", scale: "1.0", usdz: "kidcrazy.usdz", default: true }
@@ -607,7 +615,7 @@
         defaultIos: "Valkyrie.usdz",
         defaultScale: "1 1 1",
         cameraTarget: "auto auto auto",
-        orbit: "0deg 75deg auto",
+        orbit: "0deg 80deg 0.30m",
         fov: "auto",
         sizes: [
           { name: "200мм", scale: "1.0", usdz: "Valkyrie.usdz", default: true }
@@ -629,11 +637,11 @@
     function applyZoom(data, forceReset = false) {
       if (forceReset) {
         viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
-        viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg auto');
+        viewer.setAttribute('camera-orbit', data.orbit || '0deg 80deg auto');
         viewer.setAttribute('field-of-view', data.fov || 'auto');
       } else {
         if (!viewer.getAttribute('camera-target')) viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
-        if (!viewer.getAttribute('camera-orbit')) viewer.setAttribute('camera-orbit', data.orbit || '0deg 75deg auto');
+        if (!viewer.getAttribute('camera-orbit')) viewer.setAttribute('camera-orbit', data.orbit || '0deg 80deg auto');
       }
 
       if (viewer.jumpCameraToGoal) {
