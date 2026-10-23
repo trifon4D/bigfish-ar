@@ -11,8 +11,7 @@
 
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-  <!-- Цвет статус-бара под верхний тон фона -->
-  <meta name="theme-color" content="#090119">
+  <meta name="theme-color" content="#0d0124">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -23,17 +22,11 @@
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <style>
     :root {
-      --safari-top-color: #090119;
-      
-      /* Точная математическая раскладка маски из Figma:
-         1. Яркий неоновый засвет у правого края на высоте 32%
-         2. Мягкое фиолетовое рассеивание в центр
-         3. Тёмно-индиговый глубокий базовый градиент сверху вниз */
+      /* Чистый градиент строго по Figma: яркий фиолетовый луч справа на 38% высоты */
       --bg-gradient: 
-        radial-gradient(ellipse 70% 45% at 100% 32%, #7800ff 0%, #6000e6 25%, rgba(85, 0, 215, 0.45) 52%, transparent 75%),
-        radial-gradient(circle 55% at 75% 42%, rgba(95, 0, 230, 0.5) 0%, transparent 65%),
-        radial-gradient(circle 45% at 55% 50%, rgba(60, 0, 160, 0.35) 0%, transparent 70%),
-        linear-gradient(175deg, #09011a 0%, #0c0124 25%, #08001d 55%, #030010 100%);
+        radial-gradient(ellipse 95% 55% at 100% 38%, #7e00ff 0%, #6600ee 28%, rgba(85, 0, 215, 0.55) 55%, transparent 80%),
+        radial-gradient(circle 70% at 75% 45%, rgba(95, 0, 230, 0.45) 0%, transparent 70%),
+        linear-gradient(175deg, #0d0124 0%, #110130 22%, #08001d 50%, #030010 100%);
 
       --bg-base: #030010;
       --text-color: #ffffff;
@@ -60,9 +53,8 @@
       height: 100dvh;
       min-height: 100dvh;
       background-color: var(--bg-base);
-      /* Если файл 'bg.svg' или 'Задний фон.svg' лежит в репозитории — применится он, иначе идеальный CSS-градиент */
-      background-image: url('bg.svg'), var(--bg-gradient);
-      background-size: cover;
+      background-image: var(--bg-gradient);
+      background-size: 100% 100%;
       background-position: center;
       background-repeat: no-repeat;
       color: var(--text-color);
@@ -201,12 +193,14 @@
       min-height: 0;
       background: transparent !important;
     }
+
+    /* Принудительный сброс цвета рендера model-viewer и холста внутри */
     model-viewer {
       width: 100%;
       height: 100%;
       --poster-color: transparent !important;
-      background-color: transparent !important;
       background: transparent !important;
+      background-color: transparent !important;
     }
     model-viewer::part(default-ar-button) {
       display: none !important;
