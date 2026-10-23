@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>BIG FISH - Каталог AR</title>
 
-  <!-- Иконка сайта -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
 
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-  <!-- Бесшовный цвет верхней строки статуса Safari под затемнённый край -->
-  <meta name="theme-color" content="#03000b">
+  <!-- Делаем статус-бар прозрачным, чтобы градиент заходил прямо под часы и заряд -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -39,14 +37,11 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
-      margin: 0;
-      padding: 0;
+    html {
       width: 100%;
-      height: 100dvh;
-      min-height: 100dvh;
-      background-color: #03000b;
-      /* Добавлено еще +20% затемнения к верхнему и нижнему краю для максимального контраста */
+      height: 100%;
+      background-color: #0b001f;
+      /* Единый градиент на весь экран без внешних отсечений */
       background-image: 
         linear-gradient(to bottom, 
           rgba(0, 0, 0, 0.64) 0%, 
@@ -69,6 +64,15 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100dvh;
+      min-height: 100dvh;
+      background: transparent !important;
       color: var(--text-color);
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-variation-settings: 'wdth' 77, 'wght' 550;
