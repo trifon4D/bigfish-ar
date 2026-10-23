@@ -11,8 +11,8 @@
 
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-  <!-- Цвет статус-бара Safari в тон верхней части фиолетового градиента -->
-  <meta name="theme-color" content="#1a0045">
+  <!-- Цвет статус-бара в тон затемнённого верха -->
+  <meta name="theme-color" content="#0e0026">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -45,9 +45,17 @@
       width: 100%;
       height: 100dvh;
       min-height: 100dvh;
-      background-color: #12002e;
-      /* Единый градиент на весь экран без отсечений и затемнений сверху/снизу */
+      background-color: #0b001f;
+      /* Добавлено 10% затемнение у верхнего и нижнего края для контраста кнопок */
       background-image: 
+        linear-gradient(to bottom, 
+          rgba(0, 0, 0, 0.22) 0%, 
+          rgba(0, 0, 0, 0.10) 12%, 
+          transparent 24%, 
+          transparent 76%, 
+          rgba(0, 0, 0, 0.12) 88%, 
+          rgba(0, 0, 0, 0.24) 100%
+        ),
         linear-gradient(135deg, 
           #16003b 0%, 
           #2c006b 18%, 
@@ -72,7 +80,7 @@
       position: relative;
     }
 
-    /* Верхняя зона шапки: полностью прозрачная без затемняющих наложений */
+    /* Верхняя зона шапки */
     .top-header-wrapper {
       width: 100%;
       max-width: 520px;
