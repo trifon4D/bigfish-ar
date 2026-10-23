@@ -25,8 +25,6 @@
       --chip-text: #ffffff;
       --accent-color: #FFF200;
       --accent-contrast: #1C1B1F;
-      /* Насыщенный ярко-жёлтый цвет свечения */
-      --shadow-color: rgba(255, 242, 0, 0.75);
 
       --r-24: clamp(10px, calc(24 / 1080 * 100vw), 16px);
       --r-48: clamp(14px, calc(48 / 1080 * 100vw), 24px);
@@ -136,7 +134,7 @@
       align-items: center;
       justify-content: center;
       gap: clamp(6px, calc(20 / 1080 * 100vw), 10px);
-      box-shadow: 0 0 18px 2px var(--shadow-color);
+      filter: drop-shadow(0 0 10px rgba(255, 242, 0, 0.9));
       cursor: pointer;
       transition: transform 0.15s ease;
       white-space: nowrap;
@@ -174,7 +172,7 @@
       text-align: center;
       cursor: pointer;
       user-select: none;
-      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      transition: background 0.2s ease, transform 0.15s ease, filter 0.2s ease;
     }
     .model-chip:active {
       transform: scale(0.96);
@@ -186,11 +184,11 @@
       line-height: 1.1;
       white-space: nowrap;
     }
-    /* Ярко-жёлтое свечение выбранной модели */
+    /* Чистый неоновый жёлтый свет */
     .model-chip.active {
       background: var(--accent-color);
       color: var(--accent-contrast);
-      box-shadow: 0 0 20px 4px var(--shadow-color);
+      filter: drop-shadow(0 0 12px #FFF200);
     }
     .model-chip.active .chip-name {
       font-variation-settings: 'wdth' 77, 'wght' 600;
@@ -238,10 +236,11 @@
       display: flex;
       gap: clamp(6px, calc(20 / 1080 * 100vw), 10px);
       width: 100%;
-      justify-content: space-between;
+      justify-content: center;
     }
     .size-btn {
       flex: 1 1 0;
+      max-width: 130px;
       height: clamp(40px, calc(118 / 1080 * 100vw), 54px);
       background: var(--chip-bg);
       border: none;
@@ -255,19 +254,19 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      transition: background 0.2s ease, transform 0.15s ease, filter 0.2s ease;
       white-space: nowrap;
     }
     .size-btn:active {
       transform: scale(0.96);
     }
-    /* Ярко-жёлтое свечение выбранного размера */
+    /* Чистый неоновый жёлтый свет */
     .size-btn.active {
       background: var(--accent-color);
       color: var(--accent-contrast);
       font-variation-settings: 'wdth' 77, 'wght' 600;
       font-weight: 600;
-      box-shadow: 0 0 20px 4px var(--shadow-color);
+      filter: drop-shadow(0 0 12px #FFF200);
     }
 
     .color-grid {
@@ -283,14 +282,14 @@
       border: none;
       cursor: pointer;
       position: relative;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.15s ease, filter 0.15s ease;
     }
-    /* Ярко-жёлтый ободок и жёлтый ореол для выбранного цвета */
+    /* Чёткая жёлтая рамка и яркий жёлтый контурный ореол */
     .color-swatch.active {
       outline: 3px solid var(--accent-color);
       outline-offset: -2px;
       transform: scale(1.05);
-      box-shadow: 0 0 22px 5px var(--shadow-color);
+      filter: drop-shadow(0 0 8px #FFF200);
     }
 
     /* Адаптация под ландшафт */
