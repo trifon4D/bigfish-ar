@@ -22,15 +22,7 @@
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <style>
     :root {
-      /* Чистый градиент строго по Figma: яркий фиолетовый луч справа на 38% высоты */
-      --bg-gradient: 
-        radial-gradient(ellipse 95% 55% at 100% 38%, #7e00ff 0%, #6600ee 28%, rgba(85, 0, 215, 0.55) 55%, transparent 80%),
-        radial-gradient(circle 70% at 75% 45%, rgba(95, 0, 230, 0.45) 0%, transparent 70%),
-        linear-gradient(175deg, #0d0124 0%, #110130 22%, #08001d 50%, #030010 100%);
-
-      --bg-base: #030010;
       --text-color: #ffffff;
-      
       --chip-bg: #411070;
       --chip-text: #ffffff;
       --accent-color: #FFF200;
@@ -52,11 +44,7 @@
       width: 100%;
       height: 100dvh;
       min-height: 100dvh;
-      background-color: var(--bg-base);
-      background-image: var(--bg-gradient);
-      background-size: 100% 100%;
-      background-position: center;
-      background-repeat: no-repeat;
+      background-color: #06001a;
       color: var(--text-color);
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-variation-settings: 'wdth' 77, 'wght' 550;
@@ -70,6 +58,22 @@
       position: relative;
     }
 
+    /* ФИКСИРОВАННЫЙ ВЕКТОРНЫЙ ФОН ПРЯМО В КОДЕ (НЕ ТРЕБУЕТ ВНЕШНИХ ФАЙЛОВ) */
+    .bg-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      /* Вшитый SVG точно по вашей фигуре и градиенту из Figma */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 1920' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='baseGrad' x1='50%25' y1='0%25' x2='50%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230e0129'/%3E%3Cstop offset='35%25' stop-color='%2308001d'/%3E%3Cstop offset='100%25' stop-color='%23030010'/%3E%3C/linearGradient%3E%3CradialGradient id='neonGlow' cx='100%25' cy='36%25' rx='70%25' ry='40%25'%3E%3Cstop offset='0%25' stop-color='%238c00ff' stop-opacity='1'/%3E%3Cstop offset='25%25' stop-color='%236f00eb' stop-opacity='0.9'/%3E%3Cstop offset='55%25' stop-color='%234d00b8' stop-opacity='0.45'/%3E%3Cstop offset='85%25' stop-color='%23220066' stop-opacity='0.1'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='0'/%3E%3C/radialGradient%3E%3Cfilter id='blur'%3E%3CfeGaussianBlur stdDeviation='70'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='1080' height='1920' fill='url(%23baseGrad)'/%3E%3Crect width='1080' height='1920' fill='url(%23neonGlow)'/%3E%3Ccircle cx='1020' cy='690' r='480' fill='%239900ff' opacity='0.75' filter='url(%23blur)'/%3E%3Ccircle cx='950' cy='740' r='260' fill='%23b700ff' opacity='0.6' filter='url(%23blur)'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
     /* Верхняя зона шапки */
     .top-header-wrapper {
       width: 100%;
@@ -80,6 +84,7 @@
       padding: max(12px, env(safe-area-inset-top)) clamp(14px, calc(48 / 1080 * 100vw), 22px) 6px clamp(14px, calc(48 / 1080 * 100vw), 22px);
       z-index: 20;
       flex-shrink: 0;
+      position: relative;
     }
 
     .header-top-row {
@@ -192,9 +197,9 @@
       position: relative;
       min-height: 0;
       background: transparent !important;
+      z-index: 10;
     }
 
-    /* Принудительный сброс цвета рендера model-viewer и холста внутри */
     model-viewer {
       width: 100%;
       height: 100%;
@@ -216,7 +221,8 @@
       display: flex;
       flex-direction: column;
       gap: clamp(10px, calc(30 / 1080 * 100vw), 14px);
-      z-index: 10;
+      z-index: 20;
+      position: relative;
     }
 
     .size-selector {
@@ -351,6 +357,10 @@
 </head>
 <body>
 
+  <!-- Векторный фоновый слой -->
+  <div class="bg-layer"></div>
+
+  <!-- Верхний блок -->
   <div class="top-header-wrapper" id="topWrapper">
     <div class="header-top-row">
       <a href="https://taplink.cc/bigfish" target="_blank" rel="noopener noreferrer" class="brand-link" aria-label="Перейти на Taplink BIG FISH">
@@ -381,6 +391,7 @@
     </div>
   </div>
 
+  <!-- 3D AR Viewer -->
   <div class="viewer-container">
     <model-viewer 
       id="lureViewer"
@@ -409,6 +420,7 @@
     </model-viewer>
   </div>
 
+  <!-- Нижний блок -->
   <div class="controls-card" id="controlsCard">
     <div class="size-selector" id="sizeSelector"></div>
     <div class="color-grid" id="colorGrid"></div>
