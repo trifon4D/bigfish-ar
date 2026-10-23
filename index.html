@@ -18,7 +18,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,600..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75..100,300..800&display=swap" rel="stylesheet">
 
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <style>
@@ -31,17 +31,15 @@
       --bg-base: #090119;
       --text-color: #ffffff;
       
-      /* Точный цвет из инспектора Figma */
       --chip-bg: #411070;
       --chip-text: #ffffff;
       --accent-color: #FFF200;
       --accent-contrast: #1C1B1F;
       --shadow-color: rgba(255, 242, 0, 0.45);
 
-      /* Пропорции 1-в-1 относительно макета 1080px */
-      --r-24: clamp(10px, calc(24 / 1080 * 100vw), 18px);
-      --r-48: clamp(18px, calc(48 / 1080 * 100vw), 36px);
-      --font-40: clamp(13px, calc(40 / 1080 * 100vw), 22px);
+      /* Точные пропорции под макет 1080px */
+      --r-24: clamp(10px, calc(24 / 1080 * 100vw), 16px);
+      --r-48: clamp(14px, calc(48 / 1080 * 100vw), 24px);
     }
 
     * {
@@ -62,9 +60,11 @@
       background-repeat: no-repeat;
       color: var(--text-color);
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-variation-settings: 'wdth' 85;
-      font-weight: 600;
+      /* Точные переменные оси из вашего видео: Width 77, тонкое начертание */
+      font-variation-settings: 'wdth' 77, 'wght' 550;
+      font-weight: 500;
       text-transform: uppercase;
+      letter-spacing: 0.02em;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -78,8 +78,8 @@
       max-width: 520px;
       display: flex;
       flex-direction: column;
-      gap: clamp(10px, calc(30 / 1080 * 100vw), 18px);
-      padding: max(12px, env(safe-area-inset-top)) clamp(14px, calc(48 / 1080 * 100vw), 24px) 6px clamp(14px, calc(48 / 1080 * 100vw), 24px);
+      gap: clamp(10px, calc(30 / 1080 * 100vw), 16px);
+      padding: max(12px, env(safe-area-inset-top)) clamp(14px, calc(48 / 1080 * 100vw), 22px) 6px clamp(14px, calc(48 / 1080 * 100vw), 22px);
       z-index: 20;
       flex-shrink: 0;
     }
@@ -104,26 +104,26 @@
       transform: scale(0.96);
     }
     .brand-logo {
-      height: clamp(34px, calc(108 / 1080 * 100vw), 54px);
+      height: clamp(34px, calc(108 / 1080 * 100vw), 50px);
       width: auto;
-      max-width: 52vw;
+      max-width: 50vw;
       object-fit: contain;
       display: block;
     }
 
-    /* Кнопка КАМЕРА (по размерам 332 x 118 в макете 1080) */
+    /* Кнопка КАМЕРА */
     .ar-launch-btn {
-      width: clamp(118px, calc(332 / 1080 * 100vw), 168px);
-      height: clamp(42px, calc(118 / 1080 * 100vw), 60px);
+      width: clamp(118px, calc(332 / 1080 * 100vw), 160px);
+      height: clamp(42px, calc(118 / 1080 * 100vw), 54px);
       background: var(--accent-color);
       color: var(--accent-contrast);
       border: none;
-      padding: 0 clamp(10px, calc(32 / 1080 * 100vw), 18px);
+      padding: 0 clamp(10px, calc(32 / 1080 * 100vw), 16px);
       border-radius: var(--r-24);
       font-family: inherit;
-      font-variation-settings: 'wdth' 85;
-      font-size: var(--font-40);
-      font-weight: 700;
+      font-variation-settings: 'wdth' 77, 'wght' 600;
+      font-size: clamp(14px, calc(40 / 1080 * 100vw), 18px);
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -138,8 +138,8 @@
       transform: scale(0.96);
     }
     .ar-launch-btn svg {
-      width: clamp(16px, calc(46 / 1080 * 100vw), 24px);
-      height: clamp(16px, calc(46 / 1080 * 100vw), 24px);
+      width: clamp(16px, calc(46 / 1080 * 100vw), 22px);
+      height: clamp(16px, calc(46 / 1080 * 100vw), 22px);
       stroke-width: 2.2;
       flex-shrink: 0;
     }
@@ -159,7 +159,7 @@
       border: none;
       color: var(--chip-text);
       border-radius: var(--r-24);
-      height: clamp(40px, calc(118 / 1080 * 100vw), 56px);
+      height: clamp(40px, calc(118 / 1080 * 100vw), 54px);
       padding: 0 4px;
       display: flex;
       align-items: center;
@@ -173,8 +173,9 @@
       transform: scale(0.96);
     }
     .model-chip .chip-name {
-      font-size: clamp(10px, calc(32 / 1080 * 100vw), 15px);
-      font-weight: 700;
+      font-size: clamp(11px, calc(34 / 1080 * 100vw), 15px);
+      font-variation-settings: 'wdth' 77, 'wght' 550;
+      font-weight: 500;
       line-height: 1.1;
       white-space: nowrap;
     }
@@ -182,6 +183,10 @@
       background: var(--accent-color);
       color: var(--accent-contrast);
       box-shadow: 0 4px 16px var(--shadow-color);
+    }
+    .model-chip.active .chip-name {
+      font-variation-settings: 'wdth' 77, 'wght' 600;
+      font-weight: 600;
     }
 
     /* Центральная 3D-сцена */
@@ -210,10 +215,10 @@
       max-width: 520px;
       flex-shrink: 0;
       margin-top: auto;
-      padding: 6px clamp(14px, calc(48 / 1080 * 100vw), 24px) max(16px, env(safe-area-inset-bottom));
+      padding: 6px clamp(14px, calc(48 / 1080 * 100vw), 22px) max(16px, env(safe-area-inset-bottom));
       display: flex;
       flex-direction: column;
-      gap: clamp(10px, calc(30 / 1080 * 100vw), 16px);
+      gap: clamp(10px, calc(30 / 1080 * 100vw), 14px);
       z-index: 10;
     }
 
@@ -226,15 +231,15 @@
     }
     .size-btn {
       flex: 1 1 0;
-      height: clamp(40px, calc(118 / 1080 * 100vw), 56px);
+      height: clamp(40px, calc(118 / 1080 * 100vw), 54px);
       background: var(--chip-bg);
       border: none;
       color: var(--chip-text);
       border-radius: var(--r-24);
       font-family: inherit;
-      font-variation-settings: 'wdth' 85;
-      font-weight: 700;
-      font-size: clamp(11px, calc(34 / 1080 * 100vw), 16px);
+      font-variation-settings: 'wdth' 77, 'wght' 550;
+      font-weight: 500;
+      font-size: clamp(12px, calc(36 / 1080 * 100vw), 16px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -248,14 +253,16 @@
     .size-btn.active {
       background: var(--accent-color);
       color: var(--accent-contrast);
+      font-variation-settings: 'wdth' 77, 'wght' 600;
+      font-weight: 600;
       box-shadow: 0 4px 16px var(--shadow-color);
     }
 
-    /* Сетка цветов 5x2 (прямоугольники со скруглением 48px, не круги) */
+    /* Сетка цветов 5x2 (прямоугольники со скруглением, не круги) */
     .color-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: clamp(8px, calc(24 / 1080 * 100vw), 14px);
+      gap: clamp(8px, calc(24 / 1080 * 100vw), 12px);
       width: 100%;
     }
     .color-swatch {
@@ -274,7 +281,7 @@
       box-shadow: 0 0 16px var(--shadow-color);
     }
 
-    /* Адаптация под ландшафт */
+    /* Адаптация под ландшафт (горизонтальный вид) */
     @media (orientation: landscape) and (max-height: 550px) {
       body {
         flex-direction: row;
@@ -315,13 +322,15 @@
         width: auto;
         height: 36px;
         padding: 0 14px;
-        font-size: 11px;
+        font-size: 13px;
+        border-radius: 12px;
       }
       .model-chip {
         height: 36px;
+        border-radius: 12px;
       }
       .model-chip .chip-name {
-        font-size: 10px;
+        font-size: 11px;
       }
 
       .controls-card {
@@ -333,10 +342,15 @@
       }
       .size-btn {
         height: 34px;
-        font-size: 10px;
+        font-size: 11px;
+        border-radius: 12px;
       }
       .color-grid {
         gap: 6px;
+      }
+      /* Фиксированное скругление плашек цвета в ландшафте, чтобы они не круглились в шары */
+      .color-swatch {
+        border-radius: 16px !important;
       }
     }
   </style>
