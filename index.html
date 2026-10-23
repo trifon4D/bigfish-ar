@@ -11,8 +11,8 @@
 
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-  <!-- Точный монолитный цвет верха без засвета под шапку Safari -->
-  <meta name="theme-color" content="#04000e">
+  <!-- Цвет статус-бара Safari в тон верхней части фиолетового градиента -->
+  <meta name="theme-color" content="#1a0045">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -45,19 +45,16 @@
       width: 100%;
       height: 100dvh;
       min-height: 100dvh;
-      background-color: #04000e;
-      /* Мягкий диагональный поток из правого сектора в левый низ: никаких круглых шаров */
+      background-color: #12002e;
+      /* Единый градиент на весь экран без отсечений и затемнений сверху/снизу */
       background-image: 
-        linear-gradient(to bottom, #04000e 0%, #04000e 14%, transparent 28%, transparent 75%, #02000a 100%),
-        linear-gradient(128deg, 
-          #04000e 0%, 
-          #070018 20%, 
-          #16003b 35%, 
-          #380088 52%, 
-          #6300db 66%, 
-          #7500f5 76%, 
-          #5800c2 86%, 
-          #16003b 100%
+        linear-gradient(135deg, 
+          #16003b 0%, 
+          #2c006b 18%, 
+          #4d00ad 38%, 
+          #7600f5 58%, 
+          #6200d6 78%, 
+          #320078 100%
         );
       background-size: cover;
       background-position: center;
@@ -75,7 +72,7 @@
       position: relative;
     }
 
-    /* Верхняя зона шапки: полностью тёмная подложка, изолирующая верхний статус-бар */
+    /* Верхняя зона шапки: полностью прозрачная без затемняющих наложений */
     .top-header-wrapper {
       width: 100%;
       max-width: 520px;
@@ -86,7 +83,7 @@
       z-index: 20;
       flex-shrink: 0;
       position: relative;
-      background: linear-gradient(to bottom, #04000e 0%, #04000e 80%, rgba(4, 0, 14, 0) 100%);
+      background: transparent !important;
     }
 
     .header-top-row {
@@ -225,6 +222,7 @@
       gap: clamp(10px, calc(30 / 1080 * 100vw), 14px);
       z-index: 20;
       position: relative;
+      background: transparent !important;
     }
 
     .size-selector {
