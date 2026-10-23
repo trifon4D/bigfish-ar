@@ -118,6 +118,7 @@
       display: block;
     }
 
+    /* Кнопка КАМЕРА */
     .ar-launch-btn {
       width: clamp(118px, calc(332 / 1080 * 100vw), 160px);
       height: clamp(42px, calc(118 / 1080 * 100vw), 54px);
@@ -134,7 +135,7 @@
       align-items: center;
       justify-content: center;
       gap: clamp(6px, calc(20 / 1080 * 100vw), 10px);
-      filter: drop-shadow(0 0 10px rgba(255, 242, 0, 0.9));
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
       cursor: pointer;
       transition: transform 0.15s ease;
       white-space: nowrap;
@@ -172,7 +173,7 @@
       text-align: center;
       cursor: pointer;
       user-select: none;
-      transition: background 0.2s ease, transform 0.15s ease, filter 0.2s ease;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
     }
     .model-chip:active {
       transform: scale(0.96);
@@ -184,11 +185,11 @@
       line-height: 1.1;
       white-space: nowrap;
     }
-    /* Чистый неоновый жёлтый свет */
+    /* Активная модель: чистый цвет без размазанной грязи */
     .model-chip.active {
       background: var(--accent-color);
       color: var(--accent-contrast);
-      filter: drop-shadow(0 0 12px #FFF200);
+      box-shadow: 0 0 8px 1px #FFF200;
     }
     .model-chip.active .chip-name {
       font-variation-settings: 'wdth' 77, 'wght' 600;
@@ -254,19 +255,19 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.15s ease, filter 0.2s ease;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
       white-space: nowrap;
     }
     .size-btn:active {
       transform: scale(0.96);
     }
-    /* Чистый неоновый жёлтый свет */
+    /* Активный размер: чистый акцент без мути */
     .size-btn.active {
       background: var(--accent-color);
       color: var(--accent-contrast);
       font-variation-settings: 'wdth' 77, 'wght' 600;
       font-weight: 600;
-      filter: drop-shadow(0 0 12px #FFF200);
+      box-shadow: 0 0 8px 1px #FFF200;
     }
 
     .color-grid {
@@ -282,14 +283,15 @@
       border: none;
       cursor: pointer;
       position: relative;
-      transition: transform 0.15s ease, filter 0.15s ease;
+      transition: transform 0.15s ease, outline 0.15s ease;
     }
-    /* Чёткая жёлтая рамка и яркий жёлтый контурный ореол */
+    /* Выбранный цвет: ТОЛЬКО чистая жёлтая рамка 3px 1-в-1 как в Figma, НИКАКОГО грязного размытия */
     .color-swatch.active {
-      outline: 3px solid var(--accent-color);
-      outline-offset: -2px;
-      transform: scale(1.05);
-      filter: drop-shadow(0 0 8px #FFF200);
+      outline: 3.5px solid #FFF200;
+      outline-offset: -1px;
+      transform: scale(1.04);
+      box-shadow: none !important;
+      filter: none !important;
     }
 
     /* Адаптация под ландшафт */
