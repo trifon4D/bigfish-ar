@@ -44,7 +44,15 @@
       width: 100%;
       height: 100dvh;
       min-height: 100dvh;
-      background-color: #06001a;
+      background-color: #050013;
+      /* Нативный градиент без отсечений: глубокий диагональный конус из верхнего правого края */
+      background-image: 
+        radial-gradient(120% 75% at 105% 26%, #7900fa 0%, #6100dc 28%, rgba(85, 0, 205, 0.5) 50%, rgba(35, 0, 110, 0.25) 70%, transparent 90%),
+        radial-gradient(90% 65% at 85% 42%, rgba(95, 0, 220, 0.35) 0%, rgba(30, 0, 95, 0.2) 55%, transparent 80%),
+        linear-gradient(180deg, #09011a 0%, #0c0124 35%, #050014 70%, #03000d 100%);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       color: var(--text-color);
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-variation-settings: 'wdth' 77, 'wght' 550;
@@ -56,22 +64,6 @@
       align-items: center;
       overflow: hidden;
       position: relative;
-    }
-
-    /* ФИКСИРОВАННЫЙ ВЕКТОРНЫЙ ФОН ПРЯМО В КОДЕ (НЕ ТРЕБУЕТ ВНЕШНИХ ФАЙЛОВ) */
-    .bg-layer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      /* Вшитый SVG точно по вашей фигуре и градиенту из Figma */
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 1920' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='baseGrad' x1='50%25' y1='0%25' x2='50%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230e0129'/%3E%3Cstop offset='35%25' stop-color='%2308001d'/%3E%3Cstop offset='100%25' stop-color='%23030010'/%3E%3C/linearGradient%3E%3CradialGradient id='neonGlow' cx='100%25' cy='36%25' rx='70%25' ry='40%25'%3E%3Cstop offset='0%25' stop-color='%238c00ff' stop-opacity='1'/%3E%3Cstop offset='25%25' stop-color='%236f00eb' stop-opacity='0.9'/%3E%3Cstop offset='55%25' stop-color='%234d00b8' stop-opacity='0.45'/%3E%3Cstop offset='85%25' stop-color='%23220066' stop-opacity='0.1'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='0'/%3E%3C/radialGradient%3E%3Cfilter id='blur'%3E%3CfeGaussianBlur stdDeviation='70'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='1080' height='1920' fill='url(%23baseGrad)'/%3E%3Crect width='1080' height='1920' fill='url(%23neonGlow)'/%3E%3Ccircle cx='1020' cy='690' r='480' fill='%239900ff' opacity='0.75' filter='url(%23blur)'/%3E%3Ccircle cx='950' cy='740' r='260' fill='%23b700ff' opacity='0.6' filter='url(%23blur)'/%3E%3C/svg%3E");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
     }
 
     /* Верхняя зона шапки */
@@ -356,9 +348,6 @@
   </style>
 </head>
 <body>
-
-  <!-- Векторный фоновый слой -->
-  <div class="bg-layer"></div>
 
   <!-- Верхний блок -->
   <div class="top-header-wrapper" id="topWrapper">
