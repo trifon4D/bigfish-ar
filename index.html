@@ -11,7 +11,7 @@
 
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-  <!-- Цвет статус-бара -->
+  <!-- Цвет статус-бара под верхний тон фона -->
   <meta name="theme-color" content="#090119">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -24,11 +24,18 @@
   <style>
     :root {
       --safari-top-color: #090119;
+      
+      /* Точная математическая раскладка маски из Figma:
+         1. Яркий неоновый засвет у правого края на высоте 32%
+         2. Мягкое фиолетовое рассеивание в центр
+         3. Тёмно-индиговый глубокий базовый градиент сверху вниз */
       --bg-gradient: 
-        radial-gradient(circle at 10% 60%, #5e00db 0%, rgba(94, 0, 219, 0.4) 40%, transparent 100%),
-        radial-gradient(circle at 90% 90%, #22004d 0%, transparent 50%),
-        linear-gradient(155deg, #080119 0%, #0d0026 25%, #150438 50%, #1a0247 75%, #080119 100%);
-      --bg-base: #090119;
+        radial-gradient(ellipse 70% 45% at 100% 32%, #7800ff 0%, #6000e6 25%, rgba(85, 0, 215, 0.45) 52%, transparent 75%),
+        radial-gradient(circle 55% at 75% 42%, rgba(95, 0, 230, 0.5) 0%, transparent 65%),
+        radial-gradient(circle 45% at 55% 50%, rgba(60, 0, 160, 0.35) 0%, transparent 70%),
+        linear-gradient(175deg, #09011a 0%, #0c0124 25%, #08001d 55%, #030010 100%);
+
+      --bg-base: #030010;
       --text-color: #ffffff;
       
       --chip-bg: #411070;
@@ -37,7 +44,6 @@
       --accent-contrast: #1C1B1F;
       --shadow-color: rgba(255, 242, 0, 0.45);
 
-      /* Точные пропорции под макет 1080px */
       --r-24: clamp(10px, calc(24 / 1080 * 100vw), 16px);
       --r-48: clamp(14px, calc(48 / 1080 * 100vw), 24px);
     }
@@ -54,13 +60,13 @@
       height: 100dvh;
       min-height: 100dvh;
       background-color: var(--bg-base);
-      background-image: var(--bg-gradient);
+      /* Если файл 'bg.svg' или 'Задний фон.svg' лежит в репозитории — применится он, иначе идеальный CSS-градиент */
+      background-image: url('bg.svg'), var(--bg-gradient);
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       color: var(--text-color);
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      /* Точные переменные оси из вашего видео: Width 77, тонкое начертание */
       font-variation-settings: 'wdth' 77, 'wght' 550;
       font-weight: 500;
       text-transform: uppercase;
@@ -84,7 +90,6 @@
       flex-shrink: 0;
     }
 
-    /* Верхний ряд: Логотип + Кнопка КАМЕРА */
     .header-top-row {
       width: 100%;
       display: flex;
@@ -111,7 +116,6 @@
       display: block;
     }
 
-    /* Кнопка КАМЕРА */
     .ar-launch-btn {
       width: clamp(118px, calc(332 / 1080 * 100vw), 160px);
       height: clamp(42px, calc(118 / 1080 * 100vw), 54px);
@@ -144,7 +148,6 @@
       flex-shrink: 0;
     }
 
-    /* Ряд моделей */
     .model-nav {
       display: flex;
       gap: clamp(6px, calc(20 / 1080 * 100vw), 10px);
@@ -222,7 +225,6 @@
       z-index: 10;
     }
 
-    /* Линейка размеров */
     .size-selector {
       display: flex;
       gap: clamp(6px, calc(20 / 1080 * 100vw), 10px);
@@ -258,7 +260,6 @@
       box-shadow: 0 4px 16px var(--shadow-color);
     }
 
-    /* Сетка цветов 5x2 (прямоугольники со скруглением, не круги) */
     .color-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -281,7 +282,7 @@
       box-shadow: 0 0 16px var(--shadow-color);
     }
 
-    /* Адаптация под ландшафт (горизонтальный вид) */
+    /* Адаптация под ландшафт */
     @media (orientation: landscape) and (max-height: 550px) {
       body {
         flex-direction: row;
@@ -348,7 +349,6 @@
       .color-grid {
         gap: 6px;
       }
-      /* Фиксированное скругление плашек цвета в ландшафте, чтобы они не круглились в шары */
       .color-swatch {
         border-radius: 16px !important;
       }
@@ -357,7 +357,6 @@
 </head>
 <body>
 
-  <!-- Верхний блок -->
   <div class="top-header-wrapper" id="topWrapper">
     <div class="header-top-row">
       <a href="https://taplink.cc/bigfish" target="_blank" rel="noopener noreferrer" class="brand-link" aria-label="Перейти на Taplink BIG FISH">
@@ -388,7 +387,6 @@
     </div>
   </div>
 
-  <!-- 3D AR Viewer -->
   <div class="viewer-container">
     <model-viewer 
       id="lureViewer"
@@ -417,7 +415,6 @@
     </model-viewer>
   </div>
 
-  <!-- Нижний блок -->
   <div class="controls-card" id="controlsCard">
     <div class="size-selector" id="sizeSelector"></div>
     <div class="color-grid" id="colorGrid"></div>
