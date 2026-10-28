@@ -289,7 +289,7 @@
       filter: none !important;
     }
 
-    /* Адаптация под ландшафт */
+    /* Адаптация под альбомную ориентацию */
     @media (orientation: landscape) and (max-height: 550px) {
       body {
         flex-direction: row;
@@ -401,7 +401,7 @@
       ios-src="samets_4.usdz"
       alt="Рыболовная приманка BIG FISH" 
       ar 
-      ar-modes="quick-look scene-viewer webxr" 
+      ar-modes="webxr scene-viewer quick-look" 
       ar-scale="fixed"
       camera-controls 
       autoplay 
@@ -439,42 +439,22 @@
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-    triggerArBtn.addEventListener('click', (e) => {
+    triggerArBtn.addEventListener('click', function(e) {
       e.preventDefault();
       
       if (isIOS) {
-        // iOS: запуск Quick Look через нативную ссылку
-        const iosSrc = viewer.getAttribute('ios-src');
+        var iosSrc = viewer.getAttribute('ios-src');
         if (iosSrc) {
-          const absoluteUrl = new URL(iosSrc, window.location.href).href;
-          const anchor = document.createElement('a');
+          var anchor = document.createElement('a');
           anchor.setAttribute('rel', 'ar');
-          anchor.setAttribute('href', absoluteUrl);
+          anchor.setAttribute('href', iosSrc);
           anchor.appendChild(document.createElement('img'));
           document.body.appendChild(anchor);
           anchor.click();
           document.body.removeChild(anchor);
         }
       } else {
-        // Android: формирование прямого интента с абсолютным URL без сбоя в приложении Google
-        const currentSrc = viewer.getAttribute('src');
-        if (currentSrc) {
-          const absoluteGlb = new URL(currentSrc, window.location.href).href;
-          const intentUrl = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(absoluteGlb)}&mode=ar_only&resizable=false#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;end;`;
-          
-          const a = document.createElement('a');
-          a.setAttribute('href', intentUrl);
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-
-          // Запасной запуск если интент не сработал
-          setTimeout(() => {
-            if (viewer.canActivateAR) {
-              viewer.activateAR();
-            }
-          }, 350);
-        } else if (viewer.canActivateAR) {
+        if (viewer.canActivateAR) {
           viewer.activateAR();
         }
       }
@@ -551,4 +531,150 @@
           { variant: "dangerous_color_07", gradient: "linear-gradient(135deg, #FF3619 33%, #FFFF52 33%, #FFFF52 66%, #44D937 66%)" },
           { variant: "dangerous_color_08", gradient: "linear-gradient(135deg, #520E78 0%, #520E78 100%)" },
           { variant: "dangerous_color_09", gradient: "linear-gradient(135deg, #FF392E 50%, #5C782D 50%)" },
-          { variant: "dangerous_color_10", gradient: "linear-gradient(135deg, #5D4498 50%, #EB613
+          { variant: "dangerous_color_10", gradient: "linear-gradient(135deg, #5D4498 50%, #EB613A 50%)" }
+        ]
+      },
+      kidcrazy: {
+        glb: "kidcrazy.glb",
+        defaultIos: "kidcrazy.usdz",
+        defaultScale: "1 1 1",
+        cameraTarget: "auto auto auto",
+        orbit: "0deg 80deg 0.25m",
+        fov: "auto",
+        sizes: [
+          { name: "120 MM", scale: "1.0", usdz: "kidcrazy.usdz", default: true }
+        ],
+        colors: [
+          { variant: "kidcrazy_color_01", gradient: "linear-gradient(135deg, #2EB8EE 50%, #44D937 50%)" },
+          { variant: "kidcrazy_color_02", gradient: "linear-gradient(135deg, #2A6040 50%, #D15110 50%)" },
+          { variant: "kidcrazy_color_03", gradient: "linear-gradient(135deg, #C3DF68 50%, #B7A71D 50%)" },
+          { variant: "kidcrazy_color_04", gradient: "linear-gradient(135deg, #FF8636 50%, #D2CD43 50%)" },
+          { variant: "kidcrazy_color_05", gradient: "linear-gradient(135deg, #0F140C 50%, #F1F8A3 50%)" },
+          { variant: "kidcrazy_color_06", gradient: "linear-gradient(135deg, #113109 50%, #67B42D 50%)" },
+          { variant: "kidcrazy_color_07", gradient: "linear-gradient(135deg, #106527 50%, #C3BF44 50%)" }
+        ]
+      },
+      vixenvox: {
+        glb: "valkyrie.glb",
+        defaultIos: "Valkyrie.usdz",
+        defaultScale: "1 1 1",
+        cameraTarget: "auto auto auto",
+        orbit: "0deg 80deg 0.425m",
+        fov: "auto",
+        sizes: [
+          { name: "200 MM", scale: "1.0", usdz: "Valkyrie.usdz", default: true }
+        ],
+        colors: [
+          { variant: "valkyrie_color_01", gradient: "linear-gradient(135deg, #2EB8EE 42%, #FFFFFF 42%, #FFFFFF 58%, #C3EB59 58%)" },
+          { variant: "valkyrie_color_02", gradient: "linear-gradient(135deg, #064E0A 33%, #FFFF52 33%, #FFFF52 66%, #FF3619 66%)" },
+          { variant: "valkyrie_color_03", gradient: "linear-gradient(135deg, #2D2D2C 33%, #4CBE65 33%, #4CBE65 66%, #C6A945 66%)" },
+          { variant: "valkyrie_color_04", gradient: "linear-gradient(135deg, #FF8636 50%, #D2CD43 50%)" },
+          { variant: "valkyrie_color_05", gradient: "linear-gradient(135deg, #44D937 33%, #FFFF52 33%, #FFFF52 66%, #FF3619 66%)" },
+          { variant: "valkyrie_color_06", gradient: "linear-gradient(135deg, #940B3C 50%, #C6A945 50%)" },
+          { variant: "valkyrie_color_07", gradient: "linear-gradient(135deg, #87676D 42%, #C574BD 42%, #C574BD 58%, #C8C6D3 58%)" }
+        ]
+      }
+    };
+
+    let currentModelKey = 'rex';
+
+    function applyZoom(data, forceReset) {
+      if (forceReset) {
+        viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
+        viewer.setAttribute('camera-orbit', data.orbit || '0deg 80deg auto');
+        viewer.setAttribute('field-of-view', data.fov || 'auto');
+      } else {
+        if (!viewer.getAttribute('camera-target')) viewer.setAttribute('camera-target', data.cameraTarget || 'auto auto auto');
+        if (!viewer.getAttribute('camera-orbit')) viewer.setAttribute('camera-orbit', data.orbit || '0deg 80deg auto');
+      }
+
+      if (viewer.jumpCameraToGoal) {
+        viewer.jumpCameraToGoal();
+      }
+    }
+
+    function renderUI(modelKey) {
+      const data = catalogData[modelKey];
+      if (!data) return;
+      currentModelKey = modelKey;
+
+      viewer.src = data.glb;
+      viewer.setAttribute('ios-src', data.defaultIos);
+      viewer.scale = data.defaultScale;
+      applyZoom(data, true);
+
+      sizeSelector.innerHTML = '';
+      data.sizes.forEach(function(sz) {
+        var btn = document.createElement('button');
+        btn.className = 'size-btn' + (sz.default ? ' active' : '');
+        btn.textContent = sz.name;
+        btn.setAttribute('data-scale', sz.scale);
+        btn.setAttribute('data-usdz', sz.usdz);
+
+        btn.addEventListener('click', function() {
+          var allBtns = sizeSelector.querySelectorAll('.size-btn');
+          for (var i = 0; i < allBtns.length; i++) {
+            allBtns[i].classList.remove('active');
+          }
+          btn.classList.add('active');
+          var s = btn.getAttribute('data-scale');
+          viewer.scale = s + ' ' + s + ' ' + s;
+
+          var u = btn.getAttribute('data-usdz');
+          if (u) {
+            viewer.setAttribute('ios-src', u);
+          }
+          applyZoom(data, true);
+        });
+        sizeSelector.appendChild(btn);
+      });
+
+      colorGrid.innerHTML = '';
+      data.colors.forEach(function(c, index) {
+        var swatch = document.createElement('div');
+        swatch.className = 'color-swatch' + (index === 0 ? ' active' : '');
+        swatch.style.background = c.gradient;
+        swatch.setAttribute('data-variant', c.variant);
+
+        swatch.addEventListener('click', function() {
+          var allSwatches = colorGrid.querySelectorAll('.color-swatch');
+          for (var j = 0; j < allSwatches.length; j++) {
+            allSwatches[j].classList.remove('active');
+          }
+          swatch.classList.add('active');
+          viewer.variantName = c.variant;
+        });
+        colorGrid.appendChild(swatch);
+      });
+    }
+
+    for (var k = 0; k < modelChips.length; k++) {
+      modelChips[k].addEventListener('click', function() {
+        for (var m = 0; m < modelChips.length; m++) {
+          modelChips[m].classList.remove('active');
+        }
+        this.classList.add('active');
+        var mKey = this.getAttribute('data-model');
+        renderUI(mKey);
+      });
+    }
+
+    viewer.addEventListener('load', function() {
+      var data = catalogData[currentModelKey];
+      if (data) {
+        applyZoom(data, false);
+      }
+      if (viewer.availableAnimations && viewer.availableAnimations.length > 0) {
+        viewer.play({ repetitions: Infinity });
+      }
+      var activeColor = document.querySelector('.color-swatch.active');
+      if (activeColor) {
+        viewer.variantName = activeColor.getAttribute('data-variant');
+      }
+    });
+
+    renderUI('rex');
+    handleOrientationLayout();
+  </script>
+</body>
+</html>
