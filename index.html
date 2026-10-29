@@ -289,7 +289,7 @@
       filter: none !important;
     }
 
-    /* Адаптация под альбомную ориентацию */
+    /* Адаптация под ландшафт */
     @media (orientation: landscape) and (max-height: 550px) {
       body {
         flex-direction: row;
@@ -403,6 +403,7 @@
       ar 
       ar-modes="webxr scene-viewer quick-look" 
       ar-scale="fixed"
+      ar-placement="floor"
       camera-controls 
       autoplay 
       animation-name="*"
@@ -460,8 +461,27 @@
       }
     });
 
+    viewer.addEventListener('ar-status', function(event) {
+      var data = catalogData[currentModelKey];
+      if (!data) return;
+
+      if (event.detail.status === 'session-started') {
+        viewer.scale = '1 1 1';
+        viewer.setAttribute('camera-target', 'auto auto auto');
+      } else if (event.detail.status === 'not-presenting') {
+        var activeSizeBtn = sizeSelector.querySelector('.size-btn.active');
+        if (activeSizeBtn) {
+          var s = activeSizeBtn.getAttribute('data-scale');
+          viewer.scale = s + ' ' + s + ' ' + s;
+        } else {
+          viewer.scale = data.defaultScale;
+        }
+        applyZoom(data, true);
+      }
+    });
+
     function handleOrientationLayout() {
-      const isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
+      var isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
       if (isLandscape) {
         if (!topWrapper.contains(controlsCard)) {
           topWrapper.appendChild(controlsCard);
@@ -472,7 +492,7 @@
         }
       }
 
-      const data = catalogData[currentModelKey];
+      var data = catalogData[currentModelKey];
       if (data) {
         applyZoom(data, false);
       }
