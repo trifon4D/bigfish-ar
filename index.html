@@ -123,7 +123,6 @@
       background: var(--accent-color);
       color: var(--accent-contrast);
       border: none;
-      text-decoration: none;
       padding: 0 clamp(10px, calc(32 / 1080 * 100vw), 16px);
       border-radius: var(--r-24);
       font-family: inherit;
@@ -367,14 +366,13 @@
       <a href="https://taplink.cc/bigfish" target="_blank" rel="noopener noreferrer" class="brand-link" aria-label="Перейти на Taplink BIG FISH">
         <img src="logo_bigfish.png" alt="BIG FISH" class="brand-logo">
       </a>
-      <!-- Прямой элемент a с rel="ar" для обхода блокировок сторонних браузеров iOS -->
-      <a id="triggerArBtn" class="ar-launch-btn" href="samets_4.usdz" rel="ar">
+      <button id="triggerArBtn" class="ar-launch-btn">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
           <circle cx="12" cy="13" r="4"/>
         </svg>
         КАМЕРА
-      </a>
+      </button>
     </div>
 
     <div class="model-nav" id="modelNav">
@@ -438,21 +436,26 @@
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-    // Функция обновления прямой ссылки для кнопки КАМЕРА
-    function updateArButtonLink(usdzUrl) {
-      if (isIOS) {
-        triggerArBtn.setAttribute('href', usdzUrl);
-      }
-    }
-
     triggerArBtn.addEventListener('click', (e) => {
-      if (!isIOS) {
-        e.preventDefault();
+      e.preventDefault();
+      const iosSrc = viewer.getAttribute('ios-src');
+      if (isIOS && iosSrc) {
+        const absoluteUrl = new URL(iosSrc, window.location.href).href;
+        const anchor = document.createElement('a');
+        anchor.setAttribute('rel', 'ar');
+        anchor.setAttribute('href', absoluteUrl);
+        const img = document.createElement('img');
+        anchor.appendChild(img);
+        document.body.appendChild(anchor);
+        anchor.click();
+        setTimeout(() => {
+          document.body.removeChild(anchor);
+        }, 100);
+      } else {
         if (viewer.canActivateAR) {
           viewer.activateAR();
         }
       }
-      // На iOS браузер сам выполняет переход по нативному rel="ar" без перехвата скриптом
     });
 
     function handleOrientationLayout() {
@@ -595,7 +598,6 @@
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
-      updateArButtonLink(data.defaultIos);
       applyZoom(data, true);
 
       sizeSelector.innerHTML = '';
@@ -614,10 +616,7 @@
           viewer.scale = `${s} ${s} ${s}`;
 
           const u = btn.getAttribute('data-usdz');
-          if (u) {
-            viewer.setAttribute('ios-src', u);
-            updateArButtonLink(u);
-          }
+          if (u) viewer.setAttribute('ios-src', u);
           
           applyZoom(data, true);
         });
