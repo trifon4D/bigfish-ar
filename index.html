@@ -78,7 +78,6 @@
       position: relative;
     }
 
-    /* Верхняя зона шапки */
     .top-header-wrapper {
       width: 100%;
       max-width: 520px;
@@ -118,13 +117,13 @@
       display: block;
     }
 
-    /* Кнопка КАМЕРА */
     .ar-launch-btn {
       width: clamp(118px, calc(332 / 1080 * 100vw), 160px);
       height: clamp(42px, calc(118 / 1080 * 100vw), 54px);
       background: var(--accent-color);
       color: var(--accent-contrast);
       border: none;
+      text-decoration: none;
       padding: 0 clamp(10px, calc(32 / 1080 * 100vw), 16px);
       border-radius: var(--r-24);
       font-family: inherit;
@@ -185,7 +184,6 @@
       line-height: 1.1;
       white-space: nowrap;
     }
-    /* Активная модель: чистый цвет без размазанной грязи */
     .model-chip.active {
       background: var(--accent-color);
       color: var(--accent-contrast);
@@ -196,7 +194,6 @@
       font-weight: 600;
     }
 
-    /* Центральная 3D-сцена */
     .viewer-container {
       width: 100%;
       max-width: 520px;
@@ -218,7 +215,6 @@
       display: none !important;
     }
 
-    /* Нижняя панель */
     .controls-card {
       width: 100%;
       max-width: 520px;
@@ -261,7 +257,6 @@
     .size-btn:active {
       transform: scale(0.96);
     }
-    /* Активный размер: чистый акцент без мути */
     .size-btn.active {
       background: var(--accent-color);
       color: var(--accent-contrast);
@@ -285,7 +280,6 @@
       position: relative;
       transition: transform 0.15s ease, outline 0.15s ease;
     }
-    /* Выбранный цвет: ТОЛЬКО чистая жёлтая рамка 3px 1-в-1 как в Figma, НИКАКОГО грязного размытия */
     .color-swatch.active {
       outline: 3.5px solid #FFF200;
       outline-offset: -1px;
@@ -294,7 +288,6 @@
       filter: none !important;
     }
 
-    /* Адаптация под ландшафт */
     @media (orientation: landscape) and (max-height: 550px) {
       body {
         flex-direction: row;
@@ -369,19 +362,19 @@
 </head>
 <body>
 
-  <!-- Верхний блок -->
   <div class="top-header-wrapper" id="topWrapper">
     <div class="header-top-row">
       <a href="https://taplink.cc/bigfish" target="_blank" rel="noopener noreferrer" class="brand-link" aria-label="Перейти на Taplink BIG FISH">
         <img src="logo_bigfish.png" alt="BIG FISH" class="brand-logo">
       </a>
-      <button id="triggerArBtn" class="ar-launch-btn">
+      <!-- Прямой элемент a с rel="ar" для обхода блокировок сторонних браузеров iOS -->
+      <a id="triggerArBtn" class="ar-launch-btn" href="samets_4.usdz" rel="ar">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
           <circle cx="12" cy="13" r="4"/>
         </svg>
         КАМЕРА
-      </button>
+      </a>
     </div>
 
     <div class="model-nav" id="modelNav">
@@ -400,7 +393,6 @@
     </div>
   </div>
 
-  <!-- 3D AR Viewer -->
   <div class="viewer-container">
     <model-viewer 
       id="lureViewer"
@@ -429,7 +421,6 @@
     </model-viewer>
   </div>
 
-  <!-- Нижний блок -->
   <div class="controls-card" id="controlsCard">
     <div class="size-selector" id="sizeSelector"></div>
     <div class="color-grid" id="colorGrid"></div>
@@ -447,22 +438,21 @@
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-    triggerArBtn.addEventListener('click', () => {
-      const iosSrc = viewer.getAttribute('ios-src');
-      if (isIOS && iosSrc) {
-        const absoluteUrl = new URL(iosSrc, window.location.href).href;
-        const anchor = document.createElement('a');
-        anchor.setAttribute('rel', 'ar');
-        anchor.setAttribute('href', absoluteUrl);
-        anchor.appendChild(document.createElement('img'));
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-      } else {
+    // Функция обновления прямой ссылки для кнопки КАМЕРА
+    function updateArButtonLink(usdzUrl) {
+      if (isIOS) {
+        triggerArBtn.setAttribute('href', usdzUrl);
+      }
+    }
+
+    triggerArBtn.addEventListener('click', (e) => {
+      if (!isIOS) {
+        e.preventDefault();
         if (viewer.canActivateAR) {
           viewer.activateAR();
         }
       }
+      // На iOS браузер сам выполняет переход по нативному rel="ar" без перехвата скриптом
     });
 
     function handleOrientationLayout() {
@@ -605,6 +595,7 @@
       viewer.src = data.glb;
       viewer.setAttribute('ios-src', data.defaultIos);
       viewer.scale = data.defaultScale;
+      updateArButtonLink(data.defaultIos);
       applyZoom(data, true);
 
       sizeSelector.innerHTML = '';
@@ -623,7 +614,10 @@
           viewer.scale = `${s} ${s} ${s}`;
 
           const u = btn.getAttribute('data-usdz');
-          if (u) viewer.setAttribute('ios-src', u);
+          if (u) {
+            viewer.setAttribute('ios-src', u);
+            updateArButtonLink(u);
+          }
           
           applyZoom(data, true);
         });
