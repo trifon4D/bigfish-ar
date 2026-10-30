@@ -78,7 +78,6 @@
       position: relative;
     }
 
-    /* Верхняя зона шапки */
     .top-header-wrapper {
       width: 100%;
       max-width: 520px;
@@ -194,7 +193,6 @@
       font-weight: 600;
     }
 
-    /* Центральная 3D-сцена */
     .viewer-container {
       width: 100%;
       max-width: 520px;
@@ -216,7 +214,6 @@
       display: none !important;
     }
 
-    /* Нижняя панель */
     .controls-card {
       width: 100%;
       max-width: 520px;
@@ -289,7 +286,6 @@
       filter: none !important;
     }
 
-    /* Адаптация под ландшафт */
     @media (orientation: landscape) and (max-height: 550px) {
       body {
         flex-direction: row;
@@ -405,6 +401,8 @@
       ar-scale="fixed"
       ar-placement="floor"
       interaction-prompt="auto"
+      loading="eager"
+      reveal="auto"
       camera-controls 
       autoplay 
       animation-name="*"
@@ -441,6 +439,7 @@
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
+    // Запуск AR с поддержкой Яндекс Браузера
     triggerArBtn.addEventListener('click', function(e) {
       e.preventDefault();
       
@@ -456,6 +455,17 @@
           document.body.removeChild(anchor);
         }
       } else {
+        // Проверка Яндекс Браузера (он часто блокирует activateAR())
+        var isYandex = /YaBrowser/i.test(navigator.userAgent);
+        if (isYandex) {
+          var currentSrc = viewer.getAttribute('src');
+          if (currentSrc) {
+            var fullUrl = new URL(currentSrc, window.location.href).href;
+            window.location.href = 'intent://arvr.google.com/scene-viewer/1.0?file=' + encodeURIComponent(fullUrl) + '&mode=ar_only#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;end;';
+            return;
+          }
+        }
+
         if (viewer.canActivateAR) {
           viewer.activateAR();
         }
