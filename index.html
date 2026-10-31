@@ -392,13 +392,14 @@
   </div>
 
   <div class="viewer-container">
+    <!-- webxr поставлен первым, чтобы избежать сбоя Google Scene Viewer на Android -->
     <model-viewer 
       id="lureViewer"
       src="samets.glb" 
       ios-src="samets_4.usdz"
       alt="Рыболовная приманка BIG FISH" 
       ar 
-      ar-modes="quick-look scene-viewer webxr" 
+      ar-modes="webxr scene-viewer quick-look" 
       ar-scale="fixed"
       camera-controls 
       autoplay 
