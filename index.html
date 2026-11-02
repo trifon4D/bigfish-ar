@@ -287,7 +287,7 @@
       filter: none !important;
     }
 
-    /* Модальное окно */
+    /* Модальное окно без желтой рамки */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -315,7 +315,7 @@
       box-shadow: 0 10px 32px rgba(0, 0, 0, 0.85);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
     .modal-title {
       font-size: 16px;
@@ -332,20 +332,19 @@
     }
     .modal-btn {
       width: 100%;
-      height: 46px;
+      height: 48px;
       border-radius: 14px;
       font-family: inherit;
       font-weight: 600;
-      font-size: 13px;
+      font-size: 14px;
       letter-spacing: 0.02em;
       text-transform: uppercase;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-decoration: none;
       cursor: pointer;
       border: none;
-      transition: transform 0.15s ease;
+      transition: transform 0.15s ease, background 0.2s ease;
     }
     .modal-btn:active {
       transform: scale(0.97);
@@ -354,15 +353,12 @@
       background: var(--accent-color);
       color: var(--accent-contrast);
     }
-    .modal-btn-secondary {
-      background: rgba(255, 255, 255, 0.12);
-      color: #ffffff;
-    }
     .modal-btn-close {
       background: transparent;
       color: #8e8e93;
       height: 32px;
       font-size: 12px;
+      margin-top: -6px;
     }
 
     @media (orientation: landscape) and (max-height: 550px) {
@@ -502,13 +498,16 @@
     <div class="color-grid" id="colorGrid"></div>
   </div>
 
-  <!-- Модальное окно -->
+  <!-- Модальное окно для Яндекс Браузера -->
   <div class="modal-overlay" id="yandexModal">
     <div class="modal-box">
-      <h3 class="modal-title">РЕЖИМ AR НЕ ПОДДЕРЖИВАЕТСЯ</h3>
-      <p class="modal-desc">В Яндекс Браузере на Android недоступен запуск камеры. Откройте страницу в Google Chrome.</p>
-      <a href="#" id="openChromeBtn" class="modal-btn modal-btn-primary">ОТКРЫТЬ В CHROME</a>
-      <button type="button" id="copyLinkBtn" class="modal-btn modal-btn-secondary">СКОПИРОВАТЬ ССЫЛКУ</button>
+      <h3 class="modal-title">РЕЖИМ AR НЕДОСТУПЕН</h3>
+      <p class="modal-desc">
+        В Яндекс Браузере недоступен режим дополненной реальности.<br>
+        Скопируйте ссылку и откройте сайт в <strong>Google Chrome</strong>.
+      </p>
+      
+      <button type="button" id="copyLinkBtn" class="modal-btn modal-btn-primary">СКОПИРОВАТЬ ССЫЛКУ</button>
       <button type="button" id="closeModalBtn" class="modal-btn modal-btn-close">ЗАКРЫТЬ</button>
     </div>
   </div>
@@ -523,7 +522,6 @@
     const controlsCard = document.getElementById('controlsCard');
 
     const yandexModal = document.getElementById('yandexModal');
-    const openChromeBtn = document.getElementById('openChromeBtn');
     const copyLinkBtn = document.getElementById('copyLinkBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
 
@@ -554,11 +552,6 @@
       // Android: проверка на Яндекс Браузер
       const isYandex = /YaBrowser/i.test(navigator.userAgent);
       if (isYandex) {
-        const fullUrl = encodeURIComponent(window.location.href);
-        // Редиректор Google, который открывается без блокировок
-        openChromeBtn.href = `https://www.google.com/url?q=${fullUrl}`;
-        openChromeBtn.setAttribute('target', '_blank');
-        
         yandexModal.classList.add('open');
         return;
       }
@@ -573,15 +566,44 @@
     });
 
     copyLinkBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(window.location.href).then(() => {
+      const urlToCopy = window.location.href;
+
+      function setCopiedState() {
         copyLinkBtn.textContent = 'ССЫЛКА СКОПИРОВАНА!';
+        copyLinkBtn.style.background = '#44D937';
+        copyLinkBtn.style.color = '#000000';
         setTimeout(() => {
           copyLinkBtn.textContent = 'СКОПИРОВАТЬ ССЫЛКУ';
-        }, 2000);
-      }).catch(() => {
-        prompt('Скопируйте ссылку вручную:', window.location.href);
-      });
+          copyLinkBtn.style.background = 'var(--accent-color)';
+          copyLinkBtn.style.color = 'var(--accent-contrast)';
+        }, 2500);
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(urlToCopy)
+          .then(setCopiedState)
+          .catch(() => fallbackCopy(urlToCopy, setCopiedState));
+      } else {
+        fallbackCopy(urlToCopy, setCopiedState);
+      }
     });
+
+    function fallbackCopy(text, onSuccess) {
+      const tempInput = document.createElement('input');
+      tempInput.style.position = 'fixed';
+      tempInput.style.opacity = '0';
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.focus();
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        onSuccess();
+      } catch (err) {
+        prompt('Скопируйте ссылку вручную:', text);
+      }
+      document.body.removeChild(tempInput);
+    }
 
     function handleOrientationLayout() {
       const isLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
