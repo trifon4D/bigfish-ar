@@ -287,7 +287,7 @@
       filter: none !important;
     }
 
-    /* Модальное окно для Яндекс Браузера */
+    /* Модальное окно без обводки */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -305,13 +305,14 @@
     }
     .modal-box {
       background: #1c0638;
-      border: 1px solid rgba(255, 242, 0, 0.3);
+      border: none;
+      outline: none;
       border-radius: 20px;
       padding: 24px 20px;
       width: 100%;
       max-width: 360px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.85);
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -501,7 +502,7 @@
     <div class="color-grid" id="colorGrid"></div>
   </div>
 
-  <!-- Модальное окно для Яндекса -->
+  <!-- Модальное окно без желтой обводки -->
   <div class="modal-overlay" id="yandexModal">
     <div class="modal-box">
       <h3 class="modal-title">РЕЖИМ AR НЕ ПОДДЕРЖИВАЕТСЯ</h3>
@@ -550,14 +551,14 @@
         return;
       }
 
-      // Android: при открытии из Яндекс Браузера показываем своё красивое окно
+      // Android: проверка на Яндекс Браузер
       const isYandex = /YaBrowser/i.test(navigator.userAgent);
       if (isYandex) {
-        const rawUrl = window.location.href;
-        const noProto = rawUrl.replace(/^https?:\/\//, '');
-        // Формируем чистую ссылку для открытия через Chrome по физическому клику
-        openChromeBtn.href = `googlechrome://navigate?url=${encodeURIComponent(rawUrl)}`;
+        // Подготавливаем Android Intent для открытия именно в Chrome
+        const hostAndPath = window.location.host + window.location.pathname + window.location.search;
+        const chromeIntent = `intent://${hostAndPath}#Intent;scheme=https;package=com.android.chrome;end;`;
         
+        openChromeBtn.setAttribute('href', chromeIntent);
         yandexModal.classList.add('open');
         return;
       }
