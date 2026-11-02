@@ -287,7 +287,7 @@
       filter: none !important;
     }
 
-    /* Модальное окно без обводки */
+    /* Модальное окно */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -502,7 +502,7 @@
     <div class="color-grid" id="colorGrid"></div>
   </div>
 
-  <!-- Модальное окно без желтой обводки -->
+  <!-- Модальное окно -->
   <div class="modal-overlay" id="yandexModal">
     <div class="modal-box">
       <h3 class="modal-title">РЕЖИМ AR НЕ ПОДДЕРЖИВАЕТСЯ</h3>
@@ -554,11 +554,11 @@
       // Android: проверка на Яндекс Браузер
       const isYandex = /YaBrowser/i.test(navigator.userAgent);
       if (isYandex) {
-        // Подготавливаем Android Intent для открытия именно в Chrome
-        const hostAndPath = window.location.host + window.location.pathname + window.location.search;
-        const chromeIntent = `intent://${hostAndPath}#Intent;scheme=https;package=com.android.chrome;end;`;
+        const fullUrl = encodeURIComponent(window.location.href);
+        // Редиректор Google, который открывается без блокировок
+        openChromeBtn.href = `https://www.google.com/url?q=${fullUrl}`;
+        openChromeBtn.setAttribute('target', '_blank');
         
-        openChromeBtn.setAttribute('href', chromeIntent);
         yandexModal.classList.add('open');
         return;
       }
