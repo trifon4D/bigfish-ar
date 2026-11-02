@@ -287,6 +287,83 @@
       filter: none !important;
     }
 
+    /* Модальное окно для Яндекс Браузера */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-box {
+      background: #1c0638;
+      border: 1px solid rgba(255, 242, 0, 0.3);
+      border-radius: 20px;
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-color);
+      margin: 0;
+    }
+    .modal-desc {
+      font-size: 13px;
+      line-height: 1.45;
+      text-transform: none;
+      color: #e5e5ea;
+      margin: 0;
+    }
+    .modal-btn {
+      width: 100%;
+      height: 46px;
+      border-radius: 14px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease;
+    }
+    .modal-btn:active {
+      transform: scale(0.97);
+    }
+    .modal-btn-primary {
+      background: var(--accent-color);
+      color: var(--accent-contrast);
+    }
+    .modal-btn-secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+    .modal-btn-close {
+      background: transparent;
+      color: #8e8e93;
+      height: 32px;
+      font-size: 12px;
+    }
+
     @media (orientation: landscape) and (max-height: 550px) {
       body {
         flex-direction: row;
@@ -424,6 +501,17 @@
     <div class="color-grid" id="colorGrid"></div>
   </div>
 
+  <!-- Модальное окно для Яндекса -->
+  <div class="modal-overlay" id="yandexModal">
+    <div class="modal-box">
+      <h3 class="modal-title">РЕЖИМ AR НЕ ПОДДЕРЖИВАЕТСЯ</h3>
+      <p class="modal-desc">В Яндекс Браузере на Android недоступен запуск камеры. Откройте страницу в Google Chrome.</p>
+      <a href="#" id="openChromeBtn" class="modal-btn modal-btn-primary">ОТКРЫТЬ В CHROME</a>
+      <button type="button" id="copyLinkBtn" class="modal-btn modal-btn-secondary">СКОПИРОВАТЬ ССЫЛКУ</button>
+      <button type="button" id="closeModalBtn" class="modal-btn modal-btn-close">ЗАКРЫТЬ</button>
+    </div>
+  </div>
+
   <script>
     const viewer = document.getElementById('lureViewer');
     const modelChips = document.querySelectorAll('.model-chip');
@@ -432,6 +520,11 @@
     const triggerArBtn = document.getElementById('triggerArBtn');
     const topWrapper = document.getElementById('topWrapper');
     const controlsCard = document.getElementById('controlsCard');
+
+    const yandexModal = document.getElementById('yandexModal');
+    const openChromeBtn = document.getElementById('openChromeBtn');
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
 
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -457,17 +550,36 @@
         return;
       }
 
-      // Android: исключаем поломку кэша камеры Яндексом
+      // Android: при открытии из Яндекс Браузера показываем своё красивое окно
       const isYandex = /YaBrowser/i.test(navigator.userAgent);
       if (isYandex) {
-        alert("Режим дополненной реальности не поддерживается внутри Яндекс Браузера на Android.\n\nПожалуйста, скопируйте ссылку и откройте сайт в Google Chrome.");
+        const rawUrl = window.location.href;
+        const noProto = rawUrl.replace(/^https?:\/\//, '');
+        // Формируем чистую ссылку для открытия через Chrome по физическому клику
+        openChromeBtn.href = `googlechrome://navigate?url=${encodeURIComponent(rawUrl)}`;
+        
+        yandexModal.classList.add('open');
         return;
       }
 
-      // Android: нативный запуск в Chrome
       if (viewer.canActivateAR) {
         viewer.activateAR();
       }
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      yandexModal.classList.remove('open');
+    });
+
+    copyLinkBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        copyLinkBtn.textContent = 'ССЫЛКА СКОПИРОВАНА!';
+        setTimeout(() => {
+          copyLinkBtn.textContent = 'СКОПИРОВАТЬ ССЫЛКУ';
+        }, 2000);
+      }).catch(() => {
+        prompt('Скопируйте ссылку вручную:', window.location.href);
+      });
     });
 
     function handleOrientationLayout() {
