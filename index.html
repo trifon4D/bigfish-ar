@@ -1,6 +1,7 @@
 triggerArBtn.addEventListener('click', (e) => {
       e.preventDefault();
 
+      // 1. iOS — нативный вызов Quick Look
       if (isIOS) {
         const iosSrc = viewer.getAttribute('ios-src');
         if (iosSrc) {
@@ -16,31 +17,37 @@ triggerArBtn.addEventListener('click', (e) => {
             document.body.removeChild(anchor);
           }, 100);
         }
-      } else {
-        // Проверка Яндекс Браузера на Android
-        const isYandex = /YaBrowser/i.test(navigator.userAgent);
-        if (isYandex) {
-          const pageUrl = window.location.href;
-          const cleanHostAndPath = pageUrl.replace(/^https?:\/\//, '');
-          const playStoreUrl = encodeURIComponent('https://play.google.com/store/apps/details?id=com.android.chrome');
-          
-          // Железобетонный интент Chrome с прямым переходом в Play Market при отсутствии
-          const chromeIntent = `intent://${cleanHostAndPath}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${playStoreUrl};end;`;
+        return;
+      }
 
-          // Обход блокировки: имитируем жесткий пользовательский клик
-          const link = document.createElement('a');
-          link.href = chromeIntent;
-          link.rel = 'noopener noreferrer';
-          document.body.appendChild(link);
-          link.click();
-          setTimeout(() => {
-            document.body.removeChild(link);
-          }, 200);
-          return;
-        }
+      // 2. Android: ЖЕСТКАЯ БЛОКИРОВКА для Яндекс Браузера
+      // Никаких вызовов камеры или model-viewer, чтобы не вешать ARCore
+      const isYandex = /YaBrowser/i.test(navigator.userAgent);
+      if (isYandex) {
+        const currentUrl = window.location.href;
+        const cleanHostAndPath = currentUrl.replace(/^https?:\/\//, '');
+        const playStoreUrl = encodeURIComponent('https://play.google.com/store/apps/details?id=com.android.chrome');
 
-        if (viewer.canActivateAR) {
-          viewer.activateAR();
-        }
+        // Пробуем перебросить в Chrome напрямую через системный Intent
+        const chromeIntent = `intent://${cleanHostAndPath}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${playStoreUrl};end;`;
+        
+        // Создаем клик по ссылке-интенту
+        const link = document.createElement('a');
+        link.href = chromeIntent;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Если Яндекс заблокировал интент и остался на странице — выводим сообщение
+        setTimeout(() => {
+          alert("Режим AR не поддерживается в Яндекс Браузере.\n\nПожалуйста, откройте этот сайт в Google Chrome. Если Chrome не установлен, скачайте его из Google Play.");
+        }, 1000);
+        
+        return; // Полный выход: камера внутри Яндекса НЕ трогается!
+      }
+
+      // 3. Android: Штатный Chrome — запуск чистой WebXR сессии
+      if (viewer.canActivateAR) {
+        viewer.activateAR();
       }
     });
